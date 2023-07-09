@@ -4,11 +4,13 @@
  */
 package ec.edu.espol.proyectopoo;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author JOSUE
  */
-public class Comprador {
+public class Comprador{
     private String nombre;
     private String apellido;
     private String correoElectronico;
@@ -25,5 +27,10 @@ public class Comprador {
         this.clave = clave;
     }
     
+    public void RegistarNuevoComprador(ArrayList<Comprador> compradores){
     
+        
+    }
+    
+
 }
