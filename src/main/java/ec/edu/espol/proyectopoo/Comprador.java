@@ -15,5 +15,15 @@ public class Comprador {
     private String organizacion;
     private String correo;
     private String clave;
+
+    public Comprador(String nombre, String apellido, String correoElectronico, String organizacion, String correo, String clave) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.correoElectronico = correoElectronico;
+        this.organizacion = organizacion;
+        this.correo = correo;
+        this.clave = clave;
+    }
+    
     
 }

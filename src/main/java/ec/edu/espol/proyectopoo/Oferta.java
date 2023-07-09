@@ -11,4 +11,10 @@ package ec.edu.espol.proyectopoo;
 public class Oferta {
     private String correo;
     private double precio;
+
+    public Oferta(String correo, double precio) {
+        this.correo = correo;
+        this.precio = precio;
+    }
+    
 }
