@@ -12,4 +12,5 @@ public class Camioneta extends Vehiculo {
     private int numVidrios;
     private String transmision;
     private String traccion;
+    
 }
