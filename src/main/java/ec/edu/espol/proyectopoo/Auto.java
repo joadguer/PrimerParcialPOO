@@ -4,6 +4,12 @@
  */
 package ec.edu.espol.proyectopoo;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Scanner;
+
 /**
  *
  * @author JOSUE
@@ -18,6 +24,24 @@ public class Auto extends Vehiculo{
         this.transmision = transmision; 
         
     }
+
+    public int getVidrio() {
+        return vidrio;
+    }
+
+    public void setVidrio(int vidrio) {
+        this.vidrio = vidrio;
+    }
+
+    public String getTransmision() {
+        return transmision;
+    }
+
+    public void setTransmision(String transmision) {
+        this.transmision = transmision;
+    }
     
+    
+
     
 }

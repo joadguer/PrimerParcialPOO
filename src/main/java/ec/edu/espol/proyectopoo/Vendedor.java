@@ -4,8 +4,18 @@
  */
 package ec.edu.espol.proyectopoo;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -18,6 +28,8 @@ public class Vendedor {
     private String correoElectronico;
     private String clave;
 
+    
+    //considerar hacer el metodo Vendedor un metodo estatico
     public Vendedor(String nombre, String apellidos, String organizacion, String correoElectronico, String clave) {
         this.nombre = nombre;
         this.apellidos = apellidos;
@@ -27,78 +39,418 @@ public class Vendedor {
     }
     
     
-    
-    public void registrarVendedor(ArrayList<Vendedor> vendedores){
+    public void registrarVendedor(String vendedoresArchivo){
         //obteniendo datos del nuevo vendedor
         Scanner sc = new Scanner(System.in);
         System.out.println("Ingrese el Nombre:");
-        String nombre = sc.nextLine();
+        String nombreIn = sc.nextLine();
         
         System.out.println("Ingrese los Apellidos");
-        String apellidos = sc.nextLine();
+        String apellidosIn = sc.nextLine();
         
         System.out.println("Ingrese la organización");
-        String organizacion = sc.nextLine();
+        String organizacionIn = sc.nextLine();
         
+        //para que en caso de que no exista el archivo lo cree y no genere error
+        //en la parte de readfile
+        //además como esta en modo append no agrega nada
+        Vendedor.saveFile(new ArrayList<>(), vendedoresArchivo);
+        //VALIDACION DE CORREO
+        //obteniendo todos los vendedores y almacenando sus correos en una lista
+        ArrayList<Vendedor> vendedores = Vendedor.readFile(vendedoresArchivo);
+        ArrayList<String> correos = new ArrayList<>();
+        for(Vendedor ven: vendedores){
+            String c1 = ven.correoElectronico;
+            correos.add(c1);
+        }
+        //validar que el correo sea unico
+        boolean seguirEjecutando = false;
+        //el boolean se incializa con false para que no se repita
+        String correoElectronicoIn; //correoElectronico ingresado
+        do{
         System.out.println("Ingrese el Correo Electronico");
-        String correoElectronico= sc.nextLine();
+        correoElectronicoIn= sc.nextLine();
+        for(String cor: correos){
+            if(cor.equals(correoElectronicoIn)){
+                System.out.println("El correo ya existe");
+                seguirEjecutando = true;
+                //seguir ejecutando cambia a true para que se vuelva a pedir todo
+                break;
+                //el break sirve para que seguirEjecutando no cambie a false
+            }
+            seguirEjecutando = false;
+            //si la condicion no se cumple se vuelve a false
+            //este false va porque si se escribe un correo repetido 1 vez
+            //entonces la variable es true, pero se mantiene como tal siempre
+            //por tanto este seguirEjecutando se debe usar para que una vez que se repita
+            //se actualice y no se quede como true para siempre
+        }
+        }while(seguirEjecutando);
+        //el codigo arriba valida que el correo no exista
+
+        String claveIn;
+        do{
+            System.out.println("Ingrese la Clave");
+            claveIn = sc.nextLine();
+
+            //genera el Hash Code y lo almacena en una lista de claves  
+            try {
+                if (!claveIn.isBlank()) {  // Valida que la clave no esté vacía
+                    byte[] claveAlmacenar = GFG2.getSHA(claveIn);
+                } else {
+                    System.out.println("La clave no puede estar vacía.");
+                }
+            } catch (NoSuchAlgorithmException e) {
+                claveIn = null; //hace que la clave se pueda volcer a ingresar
+                //esta parte no es tan necesario considerar modificarla
+                System.out.println("Error Clave no se puede Generar");
+            }   
+        }while(claveIn.isBlank());
         
-        System.out.println("Ingrese la Clave");
-        String clave = sc.nextLine();
+        //Recordar: para comparar los hash Code solo tengo que usar el Arrays.equals
+        
+        
         
         //agregando el vendedor a la lista
-        Vendedor v1 = new Vendedor(nombre, apellidos, organizacion, correoElectronico, clave);
-        vendedores.add(v1);
+        Vendedor vAgregar = new Vendedor(nombreIn, apellidosIn, organizacionIn, correoElectronicoIn, claveIn);//la claveIn es la clave sin hash code
+        
+        //agregando el vendedor
+        vAgregar.saveFile(vendedoresArchivo);
+        //dentro del saveFile la clave se agrega como hash code, así no hay necesidad de guardard claveAlmacenar
+        //nota: claveAlmacenar está allí para ver si es posible convertir el string a hashCode
+        //tampoco es tan necesaria claveAlmacenar se puede eliminar.
     }
-    public void registrarVehiculo(ArrayList<Vehiculo> vehiculos){
+    
+    
+    //falta validar que el vendedor ingrese su correo y su clave
+    
+    public void registrarVehiculo(String archivoVendedores,String archivoVehiculos) throws NoSuchAlgorithmException{
+        //validar que se ingrese el correo y la clave
+
+        Scanner sc = new Scanner(System.in);     
+        ArrayList<Vendedor> vendedores = Vendedor.readFile(archivoVendedores);
+        
+        //correos de cada vendedor del archivo
+        ArrayList<String> correos = new ArrayList<>();
+        for(Vendedor v: vendedores){
+            String c1 = v.correoElectronico;
+            correos.add(c1);
+        }
+        //nota los correos tiene el mismo indice que los vendedores
+        
+        //el boolean se incializa con false para que no se repita        
+        boolean seguirEjecutando = false;
+        String correoElectronicoIn; //correoElectronico ingresado
+        int indice; //por si acaso lo vaya a usar despues
+        //vendedor a revisar clave
+        Vendedor vRevisarClave = null;
+        do{
+            System.out.println("Ingrese el Correo Electronico");
+            correoElectronicoIn= sc.nextLine();
+            
+            for(int i =0; i<correos.size();i++){
+                if(!(correos.get(i).equals(correoElectronicoIn))){
+                    seguirEjecutando = true;
+                    //seguir ejecutando cambia a true para que se vuelva a pedir todo
+                    //el break sirve para que seguirEjecutando no cambie a false
+                }else{
+                    seguirEjecutando = false; //actualiza el seguirEjecutando cuando encuentra el correo igual
+                    indice = i;
+                    vRevisarClave = vendedores.get(i);                
+                    break; //acaba con el for
+                } 
+            }
+            if(seguirEjecutando)
+                System.out.println("Correo ingresado no existe");
+        }while(seguirEjecutando);
+        //el codigo arriba valida que el correo este en el documento
+        
+        //validar la clave usando el hashCode
+        String claveVerificar;
+        
+        do {
+            System.out.println("Ingrese la clave:");
+            claveVerificar = sc.nextLine(); 
+            claveVerificar = GFG2.toHexString(GFG2.getSHA(claveVerificar));
+            if(!claveVerificar.equals(vRevisarClave.clave)){
+                System.out.println("Clave Ingresada es incorrecta");
+                seguirEjecutando = true;
+            }else
+                seguirEjecutando = false;
+            
+        }while(seguirEjecutando);
+        //hasta esta parte esta todo bien
+        
         //Obtener el tipo de vehiculo
-        Scanner sc = new Scanner(System.in);        
         StringBuilder sbv = new StringBuilder();
         String menuTipoVehiculo = "Ingrese el tipo de vehicula:\n";
         String opv1 = "1. Moto\n";
         String opv2 = "2. Camion\n";
-        String opv3 = "3. Auto\n";
+        String opv3 = "3. Auto";
         sbv.append(menuTipoVehiculo).append(opv1).append(opv2).append(opv3);
-        int tipoVehiculo = sc.nextInt();
-        sc.nextLine();
+        //declarado afuera para que el while lo pueda reconocer
+        int tipoVehiculo;
+        do{
+            System.out.println(sbv);
+            tipoVehiculo = sc.nextInt();
+            sc.nextLine();
+        }while(tipoVehiculo !=1 && tipoVehiculo !=2 && tipoVehiculo !=3 );
         
-        //Faltar hacer la validacion de que se debe pedir dependiendo del tipo de vehiculo
         
-        System.out.println("Ingrese la placa:");
-        String placa = sc.nextLine();
+          //VALIDACION DE PLACA
+
+        //para que en caso de que no exista el archivo lo cree y no genere error
+        //en la parte de readfile
+        //además como esta en modo append no agrega nada
+        Vehiculo.saveFile(new ArrayList<>(), archivoVehiculos);          
+        ArrayList<Vehiculo> vehiculos = Vehiculo.readFile(archivoVehiculos);
+        ArrayList<String> placas = new ArrayList<>();
+        
+        //Obteniendo las placas de cada vehiculos        
+        for(Vehiculo veh: vehiculos){
+            String p1 = veh.placa;
+            placas.add(p1);
+        }
+//        //variable para seguir ejecutando
+        seguirEjecutando = false;
+//        //placa se define afuera para luego usarlo en el constructor
+        String placa;
+        do{
+            System.out.println("Ingrese la placa:");
+            placa = sc.nextLine();
+            for(String placaRevisar: placas){
+                if(placaRevisar.equals(placa)){
+                    System.out.println("La placa ya existe");
+                    seguirEjecutando = true;
+                    break;
+                }
+                seguirEjecutando = false; //sirve en caso de una segunda iteracion del do while para que la variable se vuelva false
+            }
+        }while(seguirEjecutando);
+        
+        
+        
         System.out.println("Ingrese la marca:");
         String marca = sc.nextLine();
+        
         System.out.println("Ingrese el modelo:");
         String modelo = sc.nextLine();
+        
         System.out.println("Ingrese el tipo de motor:");
         String tipoMotor = sc.nextLine();
+        
         System.out.println("Ingrese el año:");
         int año = sc.nextInt();
         sc.nextLine();
+        
         System.out.println("Ingrese el recorrido:");
         int recorrido = sc.nextInt();
         sc.nextLine();
+        
         System.out.println("Ingrese el color:");
         String color = sc.nextLine();
+        
         System.out.println("Ingrese el tipo de combustible:");
         String tipoCombustible = sc.nextLine();
+        
+        System.out.println("Ingrese el precio");
         double precio = sc.nextDouble();
-        sc.next();
-        if(tipoVehiculo == 1){
-            Vehiculo moto = new Vehiculo(placa, marca,  modelo,  tipoMotor,  color,  tipoCombustible, año, recorrido,  precio);
-            vehiculos.add(moto);
-        }else if(tipoVehiculo == 2){
-            System.out.println("Ingrese el número de vidrios:");
-            int vidrios = sc.nextInt();
-            sc.next();
-            System.out.println("Ingrese la transmision:");
-            String transmision = sc.nextLine();
+        sc.nextLine();
+        
+//        //VALIDACION DEL TIPO DE VEHICULO
+        switch (tipoVehiculo) {
+            case 1 ->                 {
+                    Vehiculo moto = new Vehiculo(placa, marca,  modelo,  tipoMotor,  color,  tipoCombustible, año, recorrido,  precio);
+                    moto.saveFile(archivoVehiculos);
+                }
+            case 2 ->                 {
+                    System.out.println("Ingrese el número de vidrios:");
+                    int vidrios = sc.nextInt();
+                    sc.nextLine();
+                    System.out.println("Ingrese la transmision:");
+                    String transmision = sc.nextLine();
+                    Vehiculo auto = new Auto(placa, marca, modelo, tipoMotor, color, tipoCombustible, año, recorrido, precio, vidrios, transmision);
+                    auto.saveFile(archivoVehiculos);
+                    
+                }
+            case 3 ->                 {
+                    System.out.println("Ingrese el número de vidrios:");
+                    int vidrios = sc.nextInt();
+                    sc.nextLine();
+                    System.out.println("Ingrese la transmision:");
+                    String transmision = sc.nextLine(); 
+                    System.out.println("Ingrese la traccion: ");
+                    String traccion = sc.nextLine();
+                    Vehiculo camioneta = new Camioneta(placa, marca, modelo,  tipoMotor,  color,  tipoCombustible, año,  recorrido, precio, vidrios,  transmision, traccion);
+                    camioneta.saveFile(archivoVehiculos);
+                }
+            default -> {
+            }
             
-            Vehiculo auto = new Vehiculo(placa, marca,  modelo,  tipoMotor,  color,  tipoCombustible, año, recorrido,  precio);
-            vehiculos.add(auto);
         }
         
     }
-           
+     
     
+    //aceptar oferta
+    //validar que el vendedor ingrese su correo y clave
+    public boolean aceptarOferta(ArrayList<Vehiculo> vehiculos ){
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Ingrese la placa del vehiculo:");
+        String placaBuscar = sc.nextLine();
+        Vehiculo vehiculoPlaca = null;
+        for(Vehiculo v: vehiculos){
+            if(v.getPlaca().equals(placaBuscar))
+            {
+                vehiculoPlaca = v;
+                break;
+            }
+        }
+        if(vehiculoPlaca != null){
+            System.out.println("Placa no encontrada");
+            return false;
+        }else
+        {
+            System.out.println(vehiculoPlaca);
+            System.out.println("1. Aceptar oferta");
+            int aceptar = sc.nextInt();
+            sc.nextLine();
+            if(aceptar == 1)
+                return true;
+            //hacer cambios para que muestre una oferta a la vez.
+        }
+        return false; 
+    }
+    
+    
+    
+    
+    @Override
+    public String toString() {
+        try {
+            return this.nombre+"-"+this.apellidos+"-"+this.organizacion+"-"+this.correoElectronico+"-"+Arrays.toString(GFG2.getSHA(this.clave));
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(Vendedor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getApellidos() {
+        return apellidos;
+    }
+
+    public void setApellidos(String apellidos) {
+        this.apellidos = apellidos;
+    }
+
+    public String getOrganizacion() {
+        return organizacion;
+    }
+
+    public void setOrganizacion(String organizacion) {
+        this.organizacion = organizacion;
+    }
+
+    public String getCorreoElectronico() {
+        return correoElectronico;
+    }
+
+    public void setCorreoElectronico(String correoElectronico) {
+        this.correoElectronico = correoElectronico;
+    }
+
+    public String getClave() {
+        return clave;
+    }
+
+    public void setClave(String clave) {
+        this.clave = clave;
+    } 
+    
+    
+    public void saveFile(String nameFile){
+        try(PrintWriter pw = new PrintWriter(new FileOutputStream(new File(nameFile),true))){
+            pw.println(this.nombre+"-"+this.apellidos+"-"+this.organizacion+"-"+this.correoElectronico+"-"+GFG2.toHexString(GFG2.getSHA(this.clave)));
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }	
+        }
+    
+    public static void saveFile(ArrayList<Vendedor> vendedores, String nameFile){
+	try(PrintWriter pw = new PrintWriter(new FileOutputStream(new File(nameFile), true ))){
+            for(Vendedor v: vendedores){
+                pw.println(v.nombre+"-"+v.apellidos+"-"+v.organizacion+"-"+v.correoElectronico+"-"+GFG2.toHexString(GFG2.getSHA(v.clave))); //el getSHA hace que la clave se coloque en el documento como hash code
+        }
+        }catch(Exception e){
+            System.out.println(e.getMessage());    
+        }	
+    }
+    
+    
+    //la excepcion es util porque se esta leyendo el archivo y por tanto si no existe el archivo se genera una excepcion    
+    public static ArrayList<Vendedor> readFile(String nameFile){
+	ArrayList<Vendedor> vendedores = new ArrayList<>();
+	try(Scanner sc = new Scanner(new File(nameFile))){
+            while(sc.hasNextLine()){
+                String linea  = sc.nextLine();
+                String[] ven = linea.split("-");
+                Vendedor va = new Vendedor(ven[0],ven[1],ven[2],ven[3],ven[4]);
+                //agrega la clave como un hash pero en string
+                vendedores.add(va);
+            }
+        }catch(Exception e)
+        {
+            System.out.println(e.getMessage());
+        }	
+        return vendedores;
+        //retorna la lista de vendedores
+    }
+
+    
+    
+    //Revisar el la funcion enviar Gmail, hay que agregar las dependencias creo
+    
+    
+//    private static void enviarConGMail(String destinatario, String asunto, String cuerpo) {
+//    //La dirección de correo de envío
+//    String remitente = "remitente@gmail.com";
+//    //La clave de aplicación obtenida según se explica en este artículo:
+//    String claveemail = "1234567890123456";
+//
+//    Properties props = System.getProperties();
+//    props.put("mail.smtp.host", "smtp.gmail.com");  //El servidor SMTP de Google
+//    props.put("mail.smtp.user", remitente);
+//    props.put("mail.smtp.clave", claveemail);    //La clave de la cuenta
+//    props.put("mail.smtp.auth", "true");    //Usar autenticación mediante usuario y clave
+//    props.put("mail.smtp.starttls.enable", "true"); //Para conectar de manera segura al servidor SMTP
+//    props.put("mail.smtp.port", "587"); //El puerto SMTP seguro de Google
+//
+//    Session session = Session.getDefaultInstance(props);
+//    MimeMessage message = new MimeMessage(session);
+//
+//    try {
+//        message.setFrom(new InternetAddress(remitente));
+//        message.addRecipient(Message.RecipientType.TO, new InternetAddress(destinatario));   //Se podrían añadir varios de la misma manera
+//        message.setSubject(asunto);
+//        message.setText(cuerpo);
+//        Transport transport = session.getTransport("smtp");
+//        transport.connect("smtp.gmail.com", remitente, claveemail);
+//        transport.sendMessage(message, message.getAllRecipients());
+//        transport.close();
+//    }
+//    catch (MessagingException me) {
+//        me.printStackTrace();   //Si se produce un error
+//    }
+//  }
+//    
+    
+
 }

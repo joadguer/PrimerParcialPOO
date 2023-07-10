@@ -4,6 +4,12 @@
  */
 package ec.edu.espol.proyectopoo;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Scanner;
+
 /**
  *
  * @author JOSUE
@@ -19,5 +25,31 @@ public class Camioneta extends Vehiculo {
         this.transmision = transmision;
         this.traccion =traccion;
     }
+
+    public int getNumVidrios() {
+        return numVidrios;
+    }
+
+    public void setNumVidrios(int numVidrios) {
+        this.numVidrios = numVidrios;
+    }
+
+    public String getTransmision() {
+        return transmision;
+    }
+
+    public void setTransmision(String transmision) {
+        this.transmision = transmision;
+    }
+
+    public String getTraccion() {
+        return traccion;
+    }
+
+    public void setTraccion(String traccion) {
+        this.traccion = traccion;
+    }
+   
+    
     
 }
