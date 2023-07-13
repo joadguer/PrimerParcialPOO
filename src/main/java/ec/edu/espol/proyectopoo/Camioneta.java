@@ -4,11 +4,7 @@
  */
 package ec.edu.espol.proyectopoo;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Scanner;
+
 
 /**
  *
