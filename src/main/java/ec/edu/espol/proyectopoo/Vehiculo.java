@@ -218,4 +218,8 @@ public class Vehiculo {
         }
         return null;
     }
+        
+    public void addOferta(Oferta e){
+        this.ofertas.add(e);
+    }        
 }

@@ -20,7 +20,7 @@ import java.util.Scanner;
  * @author JOSUE
  */
 public class Comprador{
-    private static List<String> compradoresRegistrados = new ArrayList<>();
+    private static ArrayList<Comprador> compradoresRegistrados = new ArrayList<>();
     private String nombre;
     private String apellido;
     private String correoElectronico;
@@ -169,6 +169,14 @@ public class Comprador{
 
     public void setIdComprador(int IdComprador) {
         this.IdComprador = IdComprador;
+    }
+
+    public static ArrayList<Comprador> getCompradoresRegistrados() {
+        return compradoresRegistrados;
+    }
+
+    public static void setCompradoresRegistrados(ArrayList<Comprador> compradoresRegistrados) {
+        Comprador.compradoresRegistrados = compradoresRegistrados;
     }
     
     

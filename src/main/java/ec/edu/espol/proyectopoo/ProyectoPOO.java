@@ -24,6 +24,8 @@ public class ProyectoPOO {
         ArrayList<Vendedor> vendedores = new ArrayList<>();
         ArrayList<Vehiculo> vehiculos = new ArrayList<>();
         Vendedor v1 = new Vendedor( "nombre", "apellidos", "String organizacion", "String correoElectronico", "String clave");
+        Comprador c1 = new Comprador("tring nombre", "String apellido", "String organizacion", "String correoElectronico", "String clave");
+        
         
         //menu opciones 
         StringBuilder sb = new StringBuilder();
@@ -44,7 +46,7 @@ public class ProyectoPOO {
         
         //menu opciones de Comprador
         StringBuilder sbc = new StringBuilder();
-        String menuComprador = "Menu de Opciones Vendedor:\n";
+        String menuComprador = "Menu de Opciones Comprador:\n";
         String opc1 = "1. Registrar un nuevo comprador\n";
         String opc2 = "2. Ofertar por un vehículo\n";
         String opc3 = "3. Regresar";
@@ -65,8 +67,10 @@ public class ProyectoPOO {
             
             switch(opcionVendedor){
                     case 1: 
-                        //registrar un nuevo vendedor
                         v1.registrarVendedor("vendedores.txt");
+                        //registrar un nuevo vendedor
+                        //c1.RegistarNuevoComprador(Comprador.getCompradoresRegistrados());
+                        //comprador
                         
                         break;
                     case 2:
@@ -86,12 +90,33 @@ public class ProyectoPOO {
                         break;
                     default: 
                         break;
-            }    
-
-             
+            }            
             
         }else if(opcion == 2){
+            int opcionComprador;
+            //parte del comprador
+            do{
+                System.out.println(sbc);      
+                opcionComprador = sc.nextInt();
+                sc.nextLine();
+            }while(opcionComprador !=1 && opcionComprador !=2 && opcionComprador !=3);
             System.out.println(sbc);
+                        switch(opcionComprador){
+                    case 1: 
+                        //registrar un nuevo comprador
+                        c1.RegistarNuevoComprador(Comprador.getCompradoresRegistrados());
+                        break;
+                    case 2:
+                        //Ofertar por vehiculo
+                        c1.ofertarxVehiculo(Vehiculo.getVehiculos());
+                        break;
+                    case 3:
+                        //regresar
+                        break;
+
+                    default: 
+                        break;
+            }    
             
         }else{
             System.out.println("Gracias por usar nuestro servicio");
