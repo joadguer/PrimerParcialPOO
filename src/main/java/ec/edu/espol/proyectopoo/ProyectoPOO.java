@@ -29,7 +29,7 @@ public class ProyectoPOO {
         StringBuilder sb = new StringBuilder();
         String menu = "Menu de Opciones:\n";
         String op1 = "1. Vendedor\n";
-        String op2 = "2. Comprado\n";
+        String op2 = "2. Comprador\n";
         String op3 = "3. Salir";// no es necesario agregar \n porque ya lo tiene el println
         sb.append(menu).append(op1).append(op2).append(op3);
         
@@ -74,33 +74,7 @@ public class ProyectoPOO {
                         v1.registrarVehiculo("vendedores.txt", "vehiculos.txt");
                         break;
                     case 3:
-                        boolean seguir = true;
-                        Vendedor vendedorSeleccionado = null;
-                        do{
-                        System.out.println("Ingrese su correo");
-                        String mailVendedor = sc.nextLine();
-                        for(Vendedor ven: vendedores){
-                            if(mailVendedor.equals(ven.getCorreoElectronico()))
-                            {
-                                System.out.println("Correo Valido");
-                                vendedorSeleccionado = ven;
-                                seguir = false;
-                                break;
-                            } 
-                        }
-                        }while(seguir);
-                        
-                        boolean seguirClave = false;
-                        do{
-                        System.out.println("Ingrese su clave");
-                        String claveVendedor = sc.nextLine();
-                        if(claveVendedor.equals(vendedorSeleccionado.getClave()))
-                        {
-                            System.out.println("Clave correcta");
-                            seguirClave = false;
-                            break;
-                        }
-                        }while(seguirClave);
+                        v1.aceptarOferta("vendedores.txt", "vehiculos.txt","ofertas.txt");
                         
                         //falta mostrar por pantalla las ofertas
 
