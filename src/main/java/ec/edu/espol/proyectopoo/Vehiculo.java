@@ -42,13 +42,7 @@ public class Vehiculo {
         this.ofertas = new ArrayList<>();
     }
 
-    public ArrayList<Oferta> getOfertas() {
-        return ofertas;
-    }
 
-    public void setOfertas(ArrayList<Oferta> ofertas) {
-        this.ofertas = ofertas;
-    }
 
     public String getPlaca() {
         return placa;
