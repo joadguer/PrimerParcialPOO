@@ -186,7 +186,7 @@ public class Comprador{
     public void ofertarxVehiculo(List<Vehiculo> vehiculos) {
         Scanner sc = new Scanner(System.in);
 
-    // get the vehicle selection criteria
+    
     try {
         System.out.println("Ingrese el modelo de vehículo:");
         String modelo = sc.nextLine();
@@ -222,7 +222,7 @@ public class Comprador{
             maxPrecio = Double.parseDouble(parts[1]);
         }
 
-        // filter vehicles
+        
         List<Vehiculo> vehiculosFiltrados = new ArrayList<>();
          for (Vehiculo v : vehiculos) {
                if ((modelo == null || v.getModelo().equals(modelo)) &&
@@ -234,7 +234,7 @@ public class Comprador{
          }   
 
 
-        // user navigation and offer placement
+        
         for (int i = 0; i < vehiculosFiltrados.size(); i++) {
             System.out.println(vehiculosFiltrados.get(i).toString());
             
