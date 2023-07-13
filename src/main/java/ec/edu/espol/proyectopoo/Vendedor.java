@@ -4,6 +4,7 @@
  */
 package ec.edu.espol.proyectopoo;
 
+import ec.espol.edu.util.Util;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
@@ -16,6 +17,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import ec.espol.edu.util.Util;
 
 /**
  *
@@ -107,10 +110,6 @@ public class Vendedor {
             }   
         }while(claveIn.isBlank());
         
-        //Recordar: para comparar los hash Code solo tengo que usar el Arrays.equals
-        
-        
-        
         //agregando el vendedor a la lista
         Vendedor vAgregar = new Vendedor(nombreIn, apellidosIn, organizacionIn, correoElectronicoIn, claveIn);//la claveIn es la clave sin hash code
         
@@ -141,7 +140,6 @@ public class Vendedor {
         //el boolean se incializa con false para que no se repita        
         boolean seguirEjecutando = false;
         String correoElectronicoIn; //correoElectronico ingresado
-        int indice; //por si acaso lo vaya a usar despues
         //vendedor a revisar clave
         Vendedor vRevisarClave = null;
         do{
@@ -155,7 +153,6 @@ public class Vendedor {
                     //el break sirve para que seguirEjecutando no cambie a false
                 }else{
                     seguirEjecutando = false; //actualiza el seguirEjecutando cuando encuentra el correo igual
-                    indice = i;
                     vRevisarClave = vendedores.get(i);                
                     break; //acaba con el for
                 } 
@@ -260,7 +257,8 @@ public class Vendedor {
 //        //VALIDACION DEL TIPO DE VEHICULO
         switch (tipoVehiculo) {
             case 1 ->                 {
-                    Vehiculo moto = new Vehiculo(placa, marca,  modelo,  tipoMotor,  color,  tipoCombustible, año, recorrido,  precio);
+                    int id = Util.nextID(archivoVehiculos);
+                    Vehiculo moto = new Vehiculo(id, placa, marca,  modelo,  tipoMotor,  color,  tipoCombustible, año, recorrido,  precio);
                     moto.saveFile(archivoVehiculos);
                 }
             case 2 ->                 {
@@ -269,7 +267,9 @@ public class Vendedor {
                     sc.nextLine();
                     System.out.println("Ingrese la transmision:");
                     String transmision = sc.nextLine();
-                    Vehiculo auto = new Auto(placa, marca, modelo, tipoMotor, color, tipoCombustible, año, recorrido, precio, vidrios, transmision);
+                    int id = Util.nextID(archivoVehiculos);
+                    Vehiculo auto = new Auto(id,placa, marca, modelo, tipoMotor, color, tipoCombustible, año, recorrido, precio, vidrios, transmision);
+                    
                     auto.saveFile(archivoVehiculos);
                     
                 }
@@ -281,7 +281,8 @@ public class Vendedor {
                     String transmision = sc.nextLine(); 
                     System.out.println("Ingrese la traccion: ");
                     String traccion = sc.nextLine();
-                    Vehiculo camioneta = new Camioneta(placa, marca, modelo,  tipoMotor,  color,  tipoCombustible, año,  recorrido, precio, vidrios,  transmision, traccion);
+                    int id = Util.nextID(archivoVehiculos);                    
+                    Vehiculo camioneta = new Camioneta(id,placa, marca, modelo,  tipoMotor,  color,  tipoCombustible, año,  recorrido, precio, vidrios,  transmision, traccion);
                     camioneta.saveFile(archivoVehiculos);
                 }
             default -> {
@@ -294,36 +295,250 @@ public class Vendedor {
     
     //aceptar oferta
     //validar que el vendedor ingrese su correo y clave
-    public boolean aceptarOferta(ArrayList<Vehiculo> vehiculos ){
+    public boolean aceptarOferta(String archivoVendedores, String archivoVehiculos,String archivoOfertas) throws NoSuchAlgorithmException{
         Scanner sc = new Scanner(System.in);
-        System.out.println("Ingrese la placa del vehiculo:");
-        String placaBuscar = sc.nextLine();
-        Vehiculo vehiculoPlaca = null;
-        for(Vehiculo v: vehiculos){
-            if(v.getPlaca().equals(placaBuscar))
-            {
-                vehiculoPlaca = v;
-                break;
+        
+         //validar que se ingrese el correo y la clave
+        ArrayList<Vendedor> vendedores = Vendedor.readFile(archivoVendedores);
+        
+        //correos de cada vendedor del archivo
+        ArrayList<String> correos = new ArrayList<>();
+        for(Vendedor v: vendedores){
+            String c1 = v.correoElectronico;
+            correos.add(c1);
+        }
+        //nota los correos tiene el mismo indice que los vendedores
+        
+        //el boolean se incializa con false para que no se repita        
+        boolean seguirEjecutando = false;
+        String correoElectronicoIn; //correoElectronico ingresado
+        //vendedor a revisar clave, netbeans me pide que le de un valor por eso es null
+        Vendedor vRevisarClave = null;
+        
+        //esta parte se puede hacer directamente pero prefiero tenerlo ordenado por eso uso un arraylist de correos
+        do{
+            System.out.println("Ingrese el Correo Electronico");
+            correoElectronicoIn= sc.nextLine();
+            
+            for(int i =0; i<correos.size();i++){
+                if(!(correos.get(i).equals(correoElectronicoIn))){
+                    seguirEjecutando = true;
+                    //seguir ejecutando cambia a true para que se vuelva a pedir todo
+                    //el break sirve para que seguirEjecutando no cambie a false
+                }else{
+                    seguirEjecutando = false; //actualiza el seguirEjecutando cuando encuentra el correo igual
+                    vRevisarClave = vendedores.get(i);                
+                    break; //acaba con el for
+                } 
             }
-        }
-        if(vehiculoPlaca != null){
-            System.out.println("Placa no encontrada");
-            return false;
-        }else
-        {
-            System.out.println(vehiculoPlaca);
-            System.out.println("1. Aceptar oferta");
-            int aceptar = sc.nextInt();
-            sc.nextLine();
-            if(aceptar == 1)
-                return true;
-            //hacer cambios para que muestre una oferta a la vez.
-        }
+            if(seguirEjecutando)
+                System.out.println("Correo ingresado no existe");
+        }while(seguirEjecutando);
+        //el codigo arriba valida que el correo este en el documento
+        
+        //validar la clave usando el hashCode
+        String claveVerificar;
+        
+        do {
+            System.out.println("Ingrese la clave:");
+            claveVerificar = sc.nextLine(); 
+            claveVerificar = GFG2.toHexString(GFG2.getSHA(claveVerificar));
+            if(!claveVerificar.equals(vRevisarClave.clave)){
+                System.out.println("Clave Ingresada es incorrecta");
+                seguirEjecutando = true;
+            }else
+                seguirEjecutando = false;
+            
+        }while(seguirEjecutando);
+        
+        
+       String placaBuscar;
+       ArrayList<Vehiculo> vehiculos = Vehiculo.readFile(archivoVehiculos);
+       Vehiculo vehiculoPlaca = null;
+       //vehiculoPlaca es el vehiculo que contiene la placa que se busca
+        do{ 
+            System.out.println("Ingrese la placa del vehiculo:");
+            placaBuscar = sc.nextLine();
+            for(Vehiculo v: vehiculos){
+                if(v.getPlaca().equals(placaBuscar))
+                {
+                    vehiculoPlaca = v;
+                    break;
+                }
+            }   
+            if(vehiculoPlaca == null){
+                System.out.println("Placa no encontrada");
+            }    
+        }while(vehiculoPlaca == null);
+//revisar esta parte porque tecnicamente el vehiculo nunca tiene ofertas            
+            if(vehiculoPlaca != null)
+            {
+                
+                //esto no funciona porque cada que se use la funcion aceptar oferta se agregará cada oferta una y otra vez
+                /*
+                ArrayList<Oferta> ofertas = Oferta.readFile(archivoOfertas); //devuelve una lista con todas las ofertas
+                for(Oferta offer: ofertas){
+                    int idVehiculo = offer.getIdVehiculo(); //se obtiene el id del vehiculo al que se hace la oferta.
+                    for(Vehiculo vehiculoAñadirOfertas: Vehiculo.vehiculos){ //en vehiculos está almacenado todos los vehiculos.
+                        if(vehiculoAñadirOfertas.getIdVehiculo() == idVehiculo){ 
+                            vehiculoAñadirOfertas.ofertas.add(offer); //añade cada oferta que tenga el mismo id al vehiculo
+                        }
+                    }
+                }*/
+                Oferta.saveFile(new ArrayList<>(), archivoOfertas); //arrayList que impide que cuando se abra con el metodo read no genera error porque el archivo ahora si existe
+                ArrayList<Oferta> ofertas = Oferta.readFile(archivoOfertas); //aqui estan todas las ofertas
+                ArrayList<Oferta> ofertasVehiculo = new ArrayList<>(); //aquí estarán las ofertas que se agregaran al vehiculo
+                //ofertas readfile si devuelve un arrayList vacío por tanto no
+                    for (Oferta offer : ofertas) {
+                        if (offer.getIdVehiculo() == vehiculoPlaca.getIdVehiculo()) {
+                            ofertasVehiculo.add(offer); //se añade la oferta que coincide con el id del vehiculo al vehiculo
+                        }
+                    }
+
+                    // Asignar las ofertas al vehículo
+                    vehiculoPlaca.setOfertas(ofertasVehiculo);
+                
+                //al finalizar el vehiculo que tenga el mismo id que vehiculoPlaca tendrá todas las ofertas.
+                
+                System.out.println(vehiculoPlaca.marca+" "+vehiculoPlaca.modelo+" "+vehiculoPlaca.tipoMotor+" Precio: "+vehiculoPlaca.precio);
+                                
+                
+                if(vehiculoPlaca.ofertas.isEmpty()){
+                    System.out.println("no se han realizado orfertas");
+                }
+                
+                else if(vehiculoPlaca.ofertas.size() == 1){
+                    System.out.println("Se ha realizado "+ vehiculoPlaca.ofertas.size()+" oferta");
+                    System.out.println("""
+                                       Oferta 1
+                                       correo: """+vehiculoPlaca.getOfertas().get(0).getComprador().getCorreo()  + "\nprecio ofertado: " +vehiculoPlaca.getOfertas().get(0).getPrecio());
+                    System.out.println("1. Aceptar oferta");
+                    System.out.println("2. Salir");
+                    int aceptar = sc.nextInt();
+                    sc.nextLine();
+                    if(aceptar == 1){
+                        for (Oferta offer : ofertas) {
+                            if (offer.getIdVehiculo() == vehiculoPlaca.getIdVehiculo()) {
+                                Oferta.getOfertas().remove(offer);//se eliminan las ofertas que coinciden con el id del vehiculo al vehiculo porque el vehiculo ya se vendió
+                            }
+                    }//este codigo elimnina las ofertas del arrayList static que contiene todas las ofertas
+                        Oferta.saveFile(Oferta.getOfertas(), archivoOfertas, false);//sobreescribe el archivo de ofertas
+                        Vehiculo.getVehiculos().remove(vehiculoPlaca); //elimna del arrayList al vehiculo
+                        Vehiculo.saveFile(Vehiculo.getVehiculos(), archivoVehiculos,false);//sobreescribe el archivo y agrega cada vehiculo
+                           
+                        //implementar envir correo
+                        return true; //esta parte revisar para modificarla
+                    }    
+                    else
+                        return false; //esto solo lo pongo como prueba para salir
+                }
+                else{
+                    int opcion;
+                    System.out.println("Se han realizadao "+ vehiculoPlaca.getOfertas().size()+" ofertas");
+                    for(int i = 1; i <= vehiculoPlaca.ofertas.size(); i++){
+                        System.out.println("Oferta "+i +"\ncorreo: "+vehiculoPlaca.ofertas.get(i-1).getComprador().getCorreo()  + "\nprecio ofertado: "+ vehiculoPlaca.getOfertas().get(i-1).getPrecio());
+                        if(i == 1){
+                            do{
+                                System.out.println("1. Aceptar oferta");    
+                                System.out.println("2. Siguiente oferta");
+                                opcion = sc.nextInt();
+                                sc.nextLine();                                
+                             }while(opcion !=1 && opcion != 2);
+                                switch (opcion){
+                //no es necesario poner un default porque las validaciones permiten que los valores solo sean 1 o 2
+                                    case 1:
+                                        for (Oferta offer : ofertas) {
+                                            if (offer.getIdVehiculo() == vehiculoPlaca.getIdVehiculo()) {
+                                                Oferta.getOfertas().remove(offer);//se eliminan las ofertas que coinciden con el id del vehiculo al vehiculo porque el vehiculo ya se vendió
+                                                }
+                                            }//este codigo elimnina las ofertas del arrayList static que contiene todas las ofertas
+                                        Oferta.saveFile(Oferta.getOfertas(), archivoOfertas, false);//sobreescribe el archivo de ofertas
+                                        Vehiculo.vehiculos.remove(vehiculoPlaca); //elimna del arrayList al vehiculo
+                                        Vehiculo.saveFile(Vehiculo.vehiculos, archivoVehiculos,false);//sobreescribe el archivo y agrega cada vehiculo
+
+                                        return true; //esta parte revisar para modificarla                                        
+                                    case 2:
+                                        break;
+                }
+                
+                }
+                        else if(i == vehiculoPlaca.getOfertas().size()){
+                            do{
+                
+                                System.out.println("1. Aceptar oferta");
+                                System.out.println("2. Anterior oferta");
+                                opcion = sc.nextInt();
+                                sc.nextLine();                  
+                            }while(opcion !=1 && opcion !=2);
+                                switch (opcion){
+                                    case 1:
+                                        for (Oferta offer : ofertas) {
+                                            if (offer.getIdVehiculo() == vehiculoPlaca.getIdVehiculo()) {
+                                                Oferta.getOfertas().remove(offer);//se eliminan las ofertas que coinciden con el id del vehiculo al vehiculo porque el vehiculo ya se vendió
+                                                }
+                                            }//este codigo elimnina las ofertas del arrayList static que contiene todas las ofertas
+                                        Oferta.saveFile(Oferta.getOfertas(), archivoOfertas, false);//sobreescribe el archivo de ofertas
+                                        Vehiculo.vehiculos.remove(vehiculoPlaca); //elimna del arrayList al vehiculo
+                                        Vehiculo.saveFile(Vehiculo.vehiculos, archivoVehiculos,false);//sobreescribe el archivo y agrega cada vehiculo
+                                        return true;
+                                    case 2:
+                                        //es la ultima oferta por tanto se debería poner -1
+                                        i -=1; //menos 2 porque las iteracion le suma uno al terminar por tanto si se quiere retroceder se resta 2
+                                        break;
+                                }
+                            
+                
+                } else{
+                //muestra por pantalla los caracteristicas del vehiculo
+                //validar que el usuario solo ingrese numeros entre 1 y 3
+                    do{
+                                System.out.println("Oferta "+i +"\ncorreo: "+vehiculoPlaca.ofertas.get(i-1).getComprador().getCorreo()  + "\nprecio ofertado: "+vehiculoPlaca.ofertas.get(i-1).getPrecio());
+                                System.out.println("1. Aceptar oferta");
+                                System.out.println("2. Anterior oferta");
+                                System.out.println("3. Siguiente Oferta");
+
+                                //para Acertar la oferta
+                                opcion = sc.nextInt();
+                                sc.nextLine();
+                    }while(opcion != 1 && opcion !=2 && opcion!=3);
+                    //nota debería agregar un boton para retroceder.
+
+                                switch (opcion){
+                                    case 1:
+                                        for (Oferta offer : ofertas) {
+                                            if (offer.getIdVehiculo() == vehiculoPlaca.getIdVehiculo()) {
+                                                Oferta.getOfertas().remove(offer);//se eliminan las ofertas que coinciden con el id del vehiculo al vehiculo porque el vehiculo ya se vendió
+                                                }
+                                            }//este codigo elimnina las ofertas del arrayList static que contiene todas las ofertas
+                                        Oferta.saveFile(Oferta.getOfertas(), archivoOfertas, false);//sobreescribe el archivo de ofertas
+                                        Vehiculo.vehiculos.remove(vehiculoPlaca); //elimna del arrayList al vehiculo
+                                        Vehiculo.saveFile(Vehiculo.vehiculos, archivoVehiculos,false);//sobreescribe el archivo y agrega cada vehiculo
+                                        //falta validar enviar correo
+                                        return true;
+                                    case 2:
+                                        i -=2; //menos 2 porque las iteracion le suma uno al terminar por tanto si se quiere retroceder se resta 2
+                                        break;
+                                    case 3:
+                                        break;
+
+                    }
+                
+                }
+
+                }
+                }
+                
+                
+                          }
         return false; 
+
     }
     
-    
-    
+    //notas sobre la oferta
+    //las ofertas se deben presentear la marca el modelo y el tipo de motor y Precio: precio
+    //ademas se añade el mensaje de se han realizado x numeros de ofertas
+    //muestar la oferta 1 
+    //muestra opciones de siguiente oferta o aceptar oferta
     
     @Override
     public String toString() {
@@ -399,7 +614,7 @@ public class Vendedor {
     public static ArrayList<Vendedor> readFile(String nameFile){
 	ArrayList<Vendedor> vendedores = new ArrayList<>();
 	try(Scanner sc = new Scanner(new File(nameFile))){
-            while(sc.hasNextLine()){
+                while(sc.hasNextLine()){
                 String linea  = sc.nextLine();
                 String[] ven = linea.split("-");
                 Vendedor va = new Vendedor(ven[0],ven[1],ven[2],ven[3],ven[4]);
