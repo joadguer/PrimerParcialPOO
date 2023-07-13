@@ -411,7 +411,7 @@ public class Vendedor {
                     System.out.println("Se ha realizado "+ vehiculoPlaca.ofertas.size()+" oferta");
                     System.out.println("""
                                        Oferta 1
-                                       correo: """+vehiculoPlaca.getOfertas().get(0).getComprador().getCorreo()  + "\nprecio ofertado: " +vehiculoPlaca.getOfertas().get(0).getPrecio());
+                                       correo: """+vehiculoPlaca.getOfertas().get(0).getComprador().getCorreoElectronico()  + "\nprecio ofertado: " +vehiculoPlaca.getOfertas().get(0).getPrecio());
                     System.out.println("1. Aceptar oferta");
                     System.out.println("2. Salir");
                     int aceptar = sc.nextInt();
@@ -436,7 +436,7 @@ public class Vendedor {
                     int opcion;
                     System.out.println("Se han realizadao "+ vehiculoPlaca.getOfertas().size()+" ofertas");
                     for(int i = 1; i <= vehiculoPlaca.ofertas.size(); i++){
-                        System.out.println("Oferta "+i +"\ncorreo: "+vehiculoPlaca.ofertas.get(i-1).getComprador().getCorreo()  + "\nprecio ofertado: "+ vehiculoPlaca.getOfertas().get(i-1).getPrecio());
+                        System.out.println("Oferta "+i +"\ncorreo: "+vehiculoPlaca.ofertas.get(i-1).getComprador().getCorreoElectronico()  + "\nprecio ofertado: "+ vehiculoPlaca.getOfertas().get(i-1).getPrecio());
                         if(i == 1){
                             do{
                                 System.out.println("1. Aceptar oferta");    
@@ -492,7 +492,7 @@ public class Vendedor {
                 //muestra por pantalla los caracteristicas del vehiculo
                 //validar que el usuario solo ingrese numeros entre 1 y 3
                     do{
-                                System.out.println("Oferta "+i +"\ncorreo: "+vehiculoPlaca.ofertas.get(i-1).getComprador().getCorreo()  + "\nprecio ofertado: "+vehiculoPlaca.ofertas.get(i-1).getPrecio());
+                                System.out.println("Oferta "+i +"\ncorreo: "+vehiculoPlaca.ofertas.get(i-1).getComprador().getCorreoElectronico()  + "\nprecio ofertado: "+vehiculoPlaca.ofertas.get(i-1).getPrecio());
                                 System.out.println("1. Aceptar oferta");
                                 System.out.println("2. Anterior oferta");
                                 System.out.println("3. Siguiente Oferta");
