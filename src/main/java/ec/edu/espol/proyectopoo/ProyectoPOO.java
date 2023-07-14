@@ -20,12 +20,7 @@ public class ProyectoPOO {
 
     public static void main(String[] args) throws NoSuchAlgorithmException {
         
-        Scanner sc = new Scanner(System.in); 
-        ArrayList<Vendedor> vendedores = new ArrayList<>();
-        ArrayList<Vehiculo> vehiculos = new ArrayList<>();
-        Vendedor v1 = new Vendedor( "nombre", "apellidos", "String organizacion", "String correoElectronico", "String clave");
-        Comprador c1 = new Comprador("tring nombre", "String apellido", "String organizacion", "String correoElectronico", "String clave");
-        
+        Scanner sc = new Scanner(System.in);
         
         //menu opciones 
         StringBuilder sb = new StringBuilder();
@@ -67,7 +62,7 @@ public class ProyectoPOO {
             
             switch(opcionVendedor){
                     case 1: 
-                        v1.registrarVendedor("vendedores.txt");
+                        Vendedor.registrarVendedor("vendedores.txt");
                         //registrar un nuevo vendedor
                         //c1.RegistarNuevoComprador(Comprador.getCompradoresRegistrados());
                         //comprador
@@ -75,10 +70,10 @@ public class ProyectoPOO {
                         break;
                     case 2:
                         //Registrar un nuevo vehiculo
-                        v1.registrarVehiculo("vendedores.txt", "vehiculos.txt");
+                        Vendedor.registrarVehiculo("vendedores.txt", "vehiculos.txt");
                         break;
                     case 3:
-                        v1.aceptarOferta("vendedores.txt", "vehiculos.txt","ofertas.txt");
+                        Vendedor.aceptarOferta("vendedores.txt", "vehiculos.txt","ofertas.txt");
                         
                         //falta mostrar por pantalla las ofertas
 
@@ -104,11 +99,11 @@ public class ProyectoPOO {
                         switch(opcionComprador){
                     case 1: 
                         //registrar un nuevo comprador
-                        c1.RegistarNuevoComprador("compradores.txt");
+                        Comprador.RegistarNuevoComprador("compradores.txt");
                         break;
                     case 2:
                         //Ofertar por vehiculo
-                        c1.ofertarxVehiculo("compradores.txt","vehiculos.txt","ofertas.txt");
+                        Comprador.ofertarxVehiculo("compradores.txt","vehiculos.txt","ofertas.txt");
                         break;
                     case 3:
                         //regresar

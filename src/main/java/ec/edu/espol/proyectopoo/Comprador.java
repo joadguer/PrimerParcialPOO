@@ -61,7 +61,7 @@ public class Comprador{
     
     
     
-    public void RegistarNuevoComprador(String archivoCompradores){
+    public static void RegistarNuevoComprador(String archivoCompradores){
     
         Scanner sc = new Scanner(System.in);
         
@@ -271,7 +271,7 @@ public class Comprador{
             return null;
         }
 
-    public void ofertarxVehiculo(String archivoCompradores, String archivoVehiculos, String archivoOfertas) throws NoSuchAlgorithmException {
+    public static void ofertarxVehiculo(String archivoCompradores, String archivoVehiculos, String archivoOfertas) throws NoSuchAlgorithmException {
 
         Scanner sc = new Scanner(System.in);     
         ArrayList<Comprador> compradores = Comprador.readFile(archivoCompradores);
@@ -394,7 +394,7 @@ public class Comprador{
 //    public Oferta(int idOferta, int idComprador, int idVehiculo,String correo, double precio) {
                 
 //como obtener el id del comprador y del vehiculo
-                Oferta oferta = new Oferta(Util.nextID(archivoOfertas),vRevisarClave.IdComprador,vehiculosFiltrados.get(i).getIdVehiculo(),correoElectronicoIn, precioOfertado, vehiculosFiltrados.get(i), this);
+                Oferta oferta = new Oferta(Util.nextID(archivoOfertas),vRevisarClave.IdComprador,vehiculosFiltrados.get(i).getIdVehiculo(),correoElectronicoIn, precioOfertado );
                 oferta.saveFile(archivoOfertas);
                 vehiculosFiltrados.get(i).addOferta(oferta);
                 
@@ -418,12 +418,6 @@ public class Comprador{
 }
 
     
-    /*
-    archivos saveFile
-    
-    public Comprador(int id, String nombre, String apellido, String organizacion, String correoElectronico, String clave) {
-    
-    */
     
         public void saveFile(String nameFile){
         try(PrintWriter pw = new PrintWriter(new FileOutputStream(new File(nameFile),true))){

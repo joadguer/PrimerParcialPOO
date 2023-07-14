@@ -42,7 +42,7 @@ public class Vendedor {
     }
     
     
-    public void registrarVendedor(String vendedoresArchivo){
+    public static void registrarVendedor(String vendedoresArchivo){
         //obteniendo datos del nuevo vendedor
         Scanner sc = new Scanner(System.in);
         System.out.println("Ingrese el Nombre:");
@@ -123,7 +123,7 @@ public class Vendedor {
     
     //falta validar que el vendedor ingrese su correo y su clave
     
-    public void registrarVehiculo(String archivoVendedores,String archivoVehiculos) throws NoSuchAlgorithmException{
+    public static void registrarVehiculo(String archivoVendedores,String archivoVehiculos) throws NoSuchAlgorithmException{
         //validar que se ingrese el correo y la clave
 
         Scanner sc = new Scanner(System.in);     
@@ -295,7 +295,7 @@ public class Vendedor {
     
     //aceptar oferta
     //validar que el vendedor ingrese su correo y clave
-    public boolean aceptarOferta(String archivoVendedores, String archivoVehiculos,String archivoOfertas) throws NoSuchAlgorithmException{
+    public static boolean aceptarOferta(String archivoVendedores, String archivoVehiculos,String archivoOfertas) throws NoSuchAlgorithmException{
         Scanner sc = new Scanner(System.in);
         
          //validar que se ingrese el correo y la clave
@@ -424,8 +424,6 @@ public class Vendedor {
                 else{
                     int opcion;
                     System.out.println("Se han realizadao "+ vehiculoPlaca.getOfertas().size()+" ofertas");
-                    int vehiculoPlacaId = vehiculoPlaca.getIdVehiculo();
-
 
                     for(int i = 1; i <= vehiculoPlaca.ofertas.size(); i++){
                         System.out.println("Oferta "+i +"\ncorreo: "+vehiculoPlaca.ofertas.get(i-1).getCorreo()  + "\nprecio ofertado: "+ vehiculoPlaca.getOfertas().get(i-1).getPrecio());
