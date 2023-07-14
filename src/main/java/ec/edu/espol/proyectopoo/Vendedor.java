@@ -400,7 +400,7 @@ public class Vendedor {
                     System.out.println("Se ha realizado "+ vehiculoPlaca.ofertas.size()+" oferta");
                     System.out.println("""
                                        Oferta 1
-                                       correo: """+vehiculoPlaca.getOfertas().get(0).getComprador().getCorreoElectronico()  + "\nprecio ofertado: " +vehiculoPlaca.getOfertas().get(0).getPrecio());
+                                       correo: """+vehiculoPlaca.getOfertas().get(0).getCorreo()  + "\nprecio ofertado: " +vehiculoPlaca.getOfertas().get(0).getPrecio());
                     System.out.println("1. Aceptar oferta");
                     System.out.println("2. Salir");
                     int aceptar = sc.nextInt();
@@ -482,7 +482,7 @@ public class Vendedor {
                 //muestra por pantalla los caracteristicas del vehiculo
                 //validar que el usuario solo ingrese numeros entre 1 y 3
                     do{
-                                System.out.println("Oferta "+i +"\ncorreo: "+vehiculoPlaca.ofertas.get(i-1).getComprador().getCorreoElectronico()  + "\nprecio ofertado: "+vehiculoPlaca.ofertas.get(i-1).getPrecio());
+                                System.out.println("Oferta "+i +"\ncorreo: "+vehiculoPlaca.ofertas.get(i-1).getCorreo()  + "\nprecio ofertado: "+vehiculoPlaca.ofertas.get(i-1).getPrecio());
                                 System.out.println("1. Aceptar oferta");
                                 System.out.println("2. Anterior oferta");
                                 System.out.println("3. Siguiente Oferta");
@@ -495,14 +495,17 @@ public class Vendedor {
 
                                 switch (opcion){
                                     case 1:
-                                        for (Oferta offer : ofertas) {
+                                        ArrayList<Oferta> ofertasfinal = Oferta.readFile(archivoOfertas);
+                                        for (Oferta offer : ofertasfinal) {
                                             if (offer.getIdVehiculo() == vehiculoPlaca.getIdVehiculo()) {
-                                                Oferta.getOfertas().remove(offer);//se eliminan las ofertas que coinciden con el id del vehiculo al vehiculo porque el vehiculo ya se vendió
+                                                ofertasfinal.remove(offer);//se eliminan las ofertas que coinciden con el id del vehiculo al vehiculo porque el vehiculo ya se vendió
                                                 }
                                             }//este codigo elimnina las ofertas del arrayList static que contiene todas las ofertas
-                                        Oferta.saveFile(Oferta.getOfertas(), archivoOfertas, false);//sobreescribe el archivo de ofertas
-                                        Vehiculo.vehiculos.remove(vehiculoPlaca); //elimna del arrayList al vehiculo
-                                        Vehiculo.saveFile(Vehiculo.vehiculos, archivoVehiculos,false);//sobreescribe el archivo y agrega cada vehiculo
+                                        
+                                        Oferta.saveFile(ofertasfinal, archivoOfertas, false);//sobreescribe el archivo de ofertas
+                                        ArrayList<Vehiculo> vehiculosfinal = Vehiculo.readFile(archivoVehiculos);
+                                        vehiculosfinal.remove(vehiculoPlaca); //elimna del arrayList al vehiculo
+                                        Vehiculo.saveFile(vehiculosfinal, archivoVehiculos,false);//sobreescribe el archivo y agrega cada vehiculo
                                         //falta validar enviar correo
                                         return true;
                                     case 2:
