@@ -104,11 +104,11 @@ public class ProyectoPOO {
                         switch(opcionComprador){
                     case 1: 
                         //registrar un nuevo comprador
-                        c1.RegistarNuevoComprador(Comprador.getCompradoresRegistrados());
+                        c1.RegistarNuevoComprador("compradores.txt");
                         break;
                     case 2:
                         //Ofertar por vehiculo
-                        c1.ofertarxVehiculo(Vehiculo.getVehiculos());
+                        c1.ofertarxVehiculo("compradores.txt","vehiculos.txt","ofertas.txt");
                         break;
                     case 3:
                         //regresar

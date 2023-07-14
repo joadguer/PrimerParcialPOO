@@ -7,6 +7,7 @@ package ec.edu.espol.proyectopoo;
 
 import ec.espol.edu.util.Util;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -33,6 +34,11 @@ public class Comprador{
 
     public Comprador(int id, String nombre, String apellido, String organizacion, String correoElectronico, String clave) {
         this.IdComprador= id;
+        this.apellido = apellido;
+        this.correoElectronico = correoElectronico;
+        this.organizacion = organizacion;
+        this.clave = clave;
+        ofertas =  new ArrayList<>();       
     }
 
 
@@ -55,7 +61,7 @@ public class Comprador{
     
     
     
-    public void RegistarNuevoComprador(ArrayList<Comprador> compradores){
+    public void RegistarNuevoComprador(String archivoCompradores){
     
         Scanner sc = new Scanner(System.in);
         
@@ -67,14 +73,72 @@ public class Comprador{
         
         System.out.println("Ingrese la organización");
         String organizacion = sc.nextLine();
+      
         
+        Comprador.saveFile(new ArrayList<>(), archivoCompradores);
+        //VALIDACION DE CORREO
+        //obteniendo todos los vendedores y almacenando sus correos en una lista
+        ArrayList<Comprador> compradores = Comprador.readFile(archivoCompradores);
+        ArrayList<String> correos = new ArrayList<>();
+        for(Comprador ven: compradores){
+            String c1 = ven.correoElectronico;
+            correos.add(c1);
+        }
+        //validar que el correo sea unico
+        boolean seguirEjecutando = false;
+        //el boolean se incializa con false para que no se repita
+        String correoElectronicoIn; //correoElectronico ingresado
+        do{
+            System.out.println("Ingrese el Correo Electronico");
+            correoElectronicoIn= sc.nextLine();
+        for(String cor: correos){
+            if(cor.equals(correoElectronicoIn)){
+                System.out.println("El email ya existe, por favor ingresar otro mail");
+                seguirEjecutando = true;
+                break;
+            }
+            seguirEjecutando = false;
+        }
+        }while(seguirEjecutando);
+
+        String claveIn;
+        do{
+            System.out.println("Ingrese la Clave");
+            claveIn = sc.nextLine();
+            try {
+                if (!claveIn.isBlank()) {  // Valida que la clave no esté vacía
+                    byte[] claveAlmacenar = GFG2.getSHA(claveIn);
+                } else {
+                    System.out.println("La clave no puede estar vacía.");
+                }
+            } catch (NoSuchAlgorithmException e) {
+                claveIn = null; //hace que la clave se pueda volcer a ingresar
+                System.out.println("Error Clave no se puede Generar");
+            }   
+        }while(claveIn.isBlank());
         
+        Comprador vAgregar = new Comprador(nombre, apellidos, organizacion, correoElectronicoIn, claveIn);//la claveIn es la clave sin hash code
+        
+        vAgregar.saveFile(archivoCompradores);
+        
+        System.out.println("Comprador registrado");
+        
+
+    
+        
+/*        
+        ArrayList<String> correos = new ArrayList<>();
+        for(Comprador comprador: Comprador.getCompradoresRegistrados()){
+            String correo = comprador.getCorreoElectronico();
+            correos.add(correo);
+        }
+
         String correoElectronico;
         while(true){
             System.out.println("Ingrese su correoElectronico");
             correoElectronico = sc.nextLine();
-
-            if(compradoresRegistrados.contains(correoElectronico)){
+            
+            if(correos.contains(correoElectronico)){
                 System.out.println("El email ya existe, por favor ingresar otro mail");
             }else{
                 break;
@@ -82,7 +146,7 @@ public class Comprador{
         }
         
         String clave;
-
+        
         while(true){
             System.out.println("Ingrese clave: ");
             clave = sc.nextLine();
@@ -103,25 +167,41 @@ public class Comprador{
         } catch(NoSuchAlgorithmException e){
             e.printStackTrace();
         }
-        try(FileWriter fw = new FileWriter("claves.txt", true);
+        try(FileWriter fw = new FileWriter(archivoCompradores, true);
             PrintWriter pw = new PrintWriter(fw)){
-            pw.println(correoElectronico + ":" + clave);
-
+            pw.println(Util.nextID(archivoCompradores)+"-"+correoElectronico + "-" + clave);
+             
         }catch(IOException o){
             o.printStackTrace();
 
         }
-        
+ 
+
+
+
+
        
-        Comprador  c1 = new Comprador(Util.nextID("compradores.txt"),nombre, apellidos, organizacion, correoElectronico, clave);
-        compradores.add(c1);
+        Comprador  c1 = new Comprador(Util.nextID(archivoCompradores),nombre, apellidos, organizacion, correoElectronico, clave);
+        Comprador.getCompradoresRegistrados().add(c1);
         
         System.out.println("Comprador registrado");
         
         sc.close();
+        */
+
+
     }
 
-
+//nota elimninar posiblemente    
+    public static ArrayList<String> getCorreos(){
+        ArrayList<String> correos = new ArrayList<>();
+        for(Comprador c: Comprador.getCompradoresRegistrados()){
+            String correo = c.getCorreoElectronico();
+            correos.add(correo);
+        }
+        return correos;
+               
+    }
 
     public String getNombre() {
         return nombre;
@@ -191,10 +271,68 @@ public class Comprador{
             return null;
         }
 
-    public void ofertarxVehiculo(List<Vehiculo> vehiculos) {
+    public void ofertarxVehiculo(String archivoCompradores, String archivoVehiculos, String archivoOfertas) throws NoSuchAlgorithmException {
+
+        Scanner sc = new Scanner(System.in);     
+        ArrayList<Comprador> compradores = Comprador.readFile(archivoCompradores);
+        
+        ArrayList<String> correos = new ArrayList<>();
+        for(Comprador v: compradores){
+            String c1 = v.getCorreoElectronico();
+            correos.add(c1);
+        }
+        
+        boolean seguirEjecutando = false;
+        String correoElectronicoIn; 
+        Comprador vRevisarClave = null;
+        do{
+            System.out.println("Ingrese el Correo Electronico");
+            correoElectronicoIn= sc.nextLine();
+            
+            for(int i =0; i<correos.size();i++){
+                if(!(correos.get(i).equals(correoElectronicoIn))){
+                    seguirEjecutando = true;
+                    //seguir ejecutando cambia a true para que se vuelva a pedir todo
+                    //el break sirve para que seguirEjecutando no cambie a false
+                }else{
+                    seguirEjecutando = false; //actualiza el seguirEjecutando cuando encuentra el correo igual
+                    vRevisarClave = compradores.get(i);                
+                    break; //acaba con el for
+                } 
+            }
+            if(seguirEjecutando)
+                System.out.println("Correo ingresado no existe, ingrese un correo correcto");
+        }while(seguirEjecutando);
+        
+        String claveVerificar;
+        
+        do {
+            System.out.println("Ingrese la clave:");
+            claveVerificar = sc.nextLine(); 
+            claveVerificar = GFG2.toHexString(GFG2.getSHA(claveVerificar));
+            if(!claveVerificar.equals(vRevisarClave.getClave())){
+                System.out.println("Clave Ingresada es incorrecta, ingrese la clave correcta");
+                seguirEjecutando = true;
+            }else
+                seguirEjecutando = false;
+            
+        }while(seguirEjecutando);
+
+
+/*        
         Scanner sc = new Scanner(System.in);
 
+        System.out.println("Ingrese su correoElectronico:");
+        String correoElectronico = sc.nextLine();
+        ArrayList<String> correos = Comprador.getCorreos();
+        if(!correos.contains(correoElectronico)) {
+            System.out.println("Debe registrarse antes de poder hacer una oferta.");
+            sc.close();
+            return;
+        }
+*/
     
+
     try {
         System.out.println("Ingrese el modelo de vehículo:");
         String modelo = sc.nextLine();
@@ -230,8 +368,8 @@ public class Comprador{
             maxPrecio = Double.parseDouble(parts[1]);
         }
 
-        
-        List<Vehiculo> vehiculosFiltrados = new ArrayList<>();
+        ArrayList<Vehiculo> vehiculos = Vehiculo.readFile(archivoVehiculos);
+        ArrayList<Vehiculo> vehiculosFiltrados = new ArrayList<>();
          for (Vehiculo v : vehiculos) {
                if ((modelo == null || v.getModelo().equals(modelo)) &&
                 (v.getRecorrido() >= minRecorrido && v.getRecorrido() <= maxRecorrido) &&
@@ -252,8 +390,12 @@ public class Comprador{
             if (respuesta.equalsIgnoreCase("s")) {
                 System.out.println("Ingrese el precio ofertado: ");
                 double precioOfertado = Double.parseDouble(sc.nextLine());
+
+//    public Oferta(int idOferta, int idComprador, int idVehiculo,String correo, double precio) {
                 
-                Oferta oferta = new Oferta(this.correoElectronico, precioOfertado, vehiculosFiltrados.get(i), this);
+//como obtener el id del comprador y del vehiculo
+                Oferta oferta = new Oferta(Util.nextID(archivoOfertas),vRevisarClave.IdComprador,vehiculosFiltrados.get(i).getIdVehiculo(),correoElectronicoIn, precioOfertado, vehiculosFiltrados.get(i), this);
+                oferta.saveFile(archivoOfertas);
                 vehiculosFiltrados.get(i).addOferta(oferta);
                 
                 System.out.println("Oferta realizada con éxito");
@@ -274,6 +416,50 @@ public class Comprador{
         System.out.println("Ha ocurrido un error inesperado. Error: " + e.getMessage());
     }
 }
+
+    
+    /*
+    archivos saveFile
+    
+    public Comprador(int id, String nombre, String apellido, String organizacion, String correoElectronico, String clave) {
+    
+    */
+    
+        public void saveFile(String nameFile){
+        try(PrintWriter pw = new PrintWriter(new FileOutputStream(new File(nameFile),true))){
+            pw.println(Util.nextID(nameFile)+"-"+this.nombre+"-"+this.apellido+"-"+this.organizacion+"-"+this.correoElectronico+"-"+GFG2.toHexString(GFG2.getSHA(this.clave)));
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }	
+        }
+    
+    public static void saveFile(ArrayList<Comprador> compradores, String nameFile){
+	try(PrintWriter pw = new PrintWriter(new FileOutputStream(new File(nameFile), true ))){
+            for(Comprador v: compradores){
+                pw.println(Util.nextID(nameFile)+"-"+v.nombre+"-"+v.apellido+"-"+v.organizacion+"-"+v.correoElectronico+"-"+GFG2.toHexString(GFG2.getSHA(v.clave))); //el getSHA hace que la clave se coloque en el documento como hash code
+        }
+        }catch(Exception e){
+            System.out.println(e.getMessage());    
+        }	
+    }
+    
+        public static ArrayList<Comprador> readFile(String nameFile){
+	ArrayList<Comprador> compradores = new ArrayList<>();
+	try(Scanner sc = new Scanner(new File(nameFile))){
+                while(sc.hasNextLine()){
+                String linea  = sc.nextLine();
+                String[] ven = linea.split("-");
+                Comprador va = new Comprador(Integer.parseInt(ven[0]),ven[1],ven[2],ven[3],ven[4],ven[5]);
+                //agrega la clave como un hash pero en string
+                compradores.add(va);
+            }
+        }catch(Exception e)
+        {
+            System.out.println(e.getMessage());
+        }	
+        return compradores;
+        //retorna la lista de vendedores
+    }
 
 
   }

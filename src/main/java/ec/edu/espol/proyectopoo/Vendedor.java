@@ -374,17 +374,6 @@ public class Vendedor {
             if(vehiculoPlaca != null)
             {
                 
-                //esto no funciona porque cada que se use la funcion aceptar oferta se agregará cada oferta una y otra vez
-                /*
-                ArrayList<Oferta> ofertas = Oferta.readFile(archivoOfertas); //devuelve una lista con todas las ofertas
-                for(Oferta offer: ofertas){
-                    int idVehiculo = offer.getIdVehiculo(); //se obtiene el id del vehiculo al que se hace la oferta.
-                    for(Vehiculo vehiculoAñadirOfertas: Vehiculo.vehiculos){ //en vehiculos está almacenado todos los vehiculos.
-                        if(vehiculoAñadirOfertas.getIdVehiculo() == idVehiculo){ 
-                            vehiculoAñadirOfertas.ofertas.add(offer); //añade cada oferta que tenga el mismo id al vehiculo
-                        }
-                    }
-                }*/
                 Oferta.saveFile(new ArrayList<>(), archivoOfertas); //arrayList que impide que cuando se abra con el metodo read no genera error porque el archivo ahora si existe
                 ArrayList<Oferta> ofertas = Oferta.readFile(archivoOfertas); //aqui estan todas las ofertas
                 ArrayList<Oferta> ofertasVehiculo = new ArrayList<>(); //aquí estarán las ofertas que se agregaran al vehiculo
@@ -435,8 +424,11 @@ public class Vendedor {
                 else{
                     int opcion;
                     System.out.println("Se han realizadao "+ vehiculoPlaca.getOfertas().size()+" ofertas");
+                    int vehiculoPlacaId = vehiculoPlaca.getIdVehiculo();
+
+
                     for(int i = 1; i <= vehiculoPlaca.ofertas.size(); i++){
-                        System.out.println("Oferta "+i +"\ncorreo: "+vehiculoPlaca.ofertas.get(i-1).getComprador().getCorreoElectronico()  + "\nprecio ofertado: "+ vehiculoPlaca.getOfertas().get(i-1).getPrecio());
+                        System.out.println("Oferta "+i +"\ncorreo: "+vehiculoPlaca.ofertas.get(i-1).getCorreo()  + "\nprecio ofertado: "+ vehiculoPlaca.getOfertas().get(i-1).getPrecio());
                         if(i == 1){
                             do{
                                 System.out.println("1. Aceptar oferta");    
@@ -483,7 +475,7 @@ public class Vendedor {
                                         return true;
                                     case 2:
                                         //es la ultima oferta por tanto se debería poner -1
-                                        i -=1; //menos 2 porque las iteracion le suma uno al terminar por tanto si se quiere retroceder se resta 2
+                                        i -=2; //menos 2 porque las iteracion le suma uno al terminar por tanto si se quiere retroceder se resta 2
                                         break;
                                 }
                             

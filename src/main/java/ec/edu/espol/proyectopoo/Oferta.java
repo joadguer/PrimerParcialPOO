@@ -44,6 +44,7 @@ public class Oferta {
     }
     
     
+    
 
     public String getCorreo() {
         return correo;
