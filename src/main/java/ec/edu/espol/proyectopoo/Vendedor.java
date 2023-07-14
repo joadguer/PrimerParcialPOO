@@ -354,14 +354,17 @@ public class Vendedor {
                     int aceptar = sc.nextInt();
                     sc.nextLine();
                     if(aceptar == 1){
+                        
+                    
                         ArrayList<Oferta> ofertasfinal = Oferta.readFile(archivoOfertas);
+                        ArrayList<Oferta> ofertasfinal2 = Oferta.readFile(archivoOfertas);
                                         
                                         for (Oferta offer : ofertasfinal) {
                                             if (offer.getIdVehiculo() == vehiculoPlaca.getIdVehiculo()) {
-                                                ofertasfinal.remove(offer);//se eliminan las ofertas que coinciden con el id del vehiculo al vehiculo porque el vehiculo ya se vendió
+                                                ofertasfinal2.remove(offer);//se eliminan las ofertas que coinciden con el id del vehiculo al vehiculo porque el vehiculo ya se vendió
                                                 }
                                             }//este codigo elimnina las ofertas del arrayList static que contiene todas las ofertas
-                                            Oferta.saveFile(ofertasfinal, archivoOfertas, false);//sobreescribe el archivo de ofertas
+                                            Oferta.saveFile(ofertasfinal2, archivoOfertas, false);//sobreescribe el archivo de ofertas
                                             ArrayList<Vehiculo> vehiculosfinal = Vehiculo.readFile(archivoVehiculos);
                                             vehiculosfinal.remove(vehiculoPlaca); //elimna del arrayList al vehiculo
                                             Vehiculo.saveFile(vehiculosfinal, archivoVehiculos,false);//sobreescribe el archivo y agrega cada vehiculo
@@ -387,19 +390,21 @@ public class Vendedor {
                                 switch (opcion){
                 //no es necesario poner un default porque las validaciones permiten que los valores solo sean 1 o 2
                                     case 1:
-                                        ArrayList<Oferta> ofertasfinal = Oferta.readFile(archivoOfertas);
+                                        
+                        ArrayList<Oferta> ofertasfinal = Oferta.readFile(archivoOfertas);
+                        ArrayList<Oferta> ofertasfinal2 = Oferta.readFile(archivoOfertas);
                                         
                                         for (Oferta offer : ofertasfinal) {
                                             if (offer.getIdVehiculo() == vehiculoPlaca.getIdVehiculo()) {
-                                                ofertasfinal.remove(offer);
+                                                ofertasfinal2.remove(offer);//se eliminan las ofertas que coinciden con el id del vehiculo al vehiculo porque el vehiculo ya se vendió
                                                 }
-                                            }
-                                            Oferta.saveFile(ofertasfinal, archivoOfertas, false);
+                                            }//este codigo elimnina las ofertas del arrayList static que contiene todas las ofertas
+                                            Oferta.saveFile(ofertasfinal2, archivoOfertas, false);//sobreescribe el archivo de ofertas
                                             ArrayList<Vehiculo> vehiculosfinal = Vehiculo.readFile(archivoVehiculos);
-                                            vehiculosfinal.remove(vehiculoPlaca); 
-                                            Vehiculo.saveFile(vehiculosfinal, archivoVehiculos,false);
+                                            vehiculosfinal.remove(vehiculoPlaca); //elimna del arrayList al vehiculo
+                                            Vehiculo.saveFile(vehiculosfinal, archivoVehiculos,false);//sobreescribe el archivo y agrega cada vehiculo
 
-                                        return true; 
+                                        return true; //esta parte revisar para modificarla   
                                     case 2:
                                         break;
                 }
@@ -415,19 +420,21 @@ public class Vendedor {
                             }while(opcion !=1 && opcion !=2);
                                 switch (opcion){
                                     case 1:
-                                     ArrayList<Oferta> ofertasfinal = Oferta.readFile(archivoOfertas);
+                                     
+                        ArrayList<Oferta> ofertasfinal = Oferta.readFile(archivoOfertas);
+                        ArrayList<Oferta> ofertasfinal2 = Oferta.readFile(archivoOfertas);
                                         
                                         for (Oferta offer : ofertasfinal) {
                                             if (offer.getIdVehiculo() == vehiculoPlaca.getIdVehiculo()) {
-                                                ofertasfinal.remove(offer);//se eliminan las ofertas que coinciden con el id del vehiculo al vehiculo porque el vehiculo ya se vendió
+                                                ofertasfinal2.remove(offer);//se eliminan las ofertas que coinciden con el id del vehiculo al vehiculo porque el vehiculo ya se vendió
                                                 }
                                             }//este codigo elimnina las ofertas del arrayList static que contiene todas las ofertas
-                                            Oferta.saveFile(ofertasfinal, archivoOfertas, false);//sobreescribe el archivo de ofertas
+                                            Oferta.saveFile(ofertasfinal2, archivoOfertas, false);//sobreescribe el archivo de ofertas
                                             ArrayList<Vehiculo> vehiculosfinal = Vehiculo.readFile(archivoVehiculos);
                                             vehiculosfinal.remove(vehiculoPlaca); //elimna del arrayList al vehiculo
                                             Vehiculo.saveFile(vehiculosfinal, archivoVehiculos,false);//sobreescribe el archivo y agrega cada vehiculo
 
-                                        return true; 
+                                        return true; //esta parte revisar para modificarla   
                                     case 2:
                                         i -=2;
                                         break;
