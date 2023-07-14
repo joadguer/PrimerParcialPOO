@@ -500,16 +500,15 @@ public class Vendedor {
                                             if (offer.getIdVehiculo() == vehiculoPlaca.getIdVehiculo()) {
                                                 ofertasfinal.remove(offer);//se eliminan las ofertas que coinciden con el id del vehiculo al vehiculo porque el vehiculo ya se vendió
                                                 }
-                                            }//este codigo elimnina las ofertas del arrayList static que contiene todas las ofertas
+                                            }
                                         
                                         Oferta.saveFile(ofertasfinal, archivoOfertas, false);//sobreescribe el archivo de ofertas
                                         ArrayList<Vehiculo> vehiculosfinal = Vehiculo.readFile(archivoVehiculos);
                                         vehiculosfinal.remove(vehiculoPlaca); //elimna del arrayList al vehiculo
                                         Vehiculo.saveFile(vehiculosfinal, archivoVehiculos,false);//sobreescribe el archivo y agrega cada vehiculo
-                                        //falta validar enviar correo
                                         return true;
                                     case 2:
-                                        i -=2; //menos 2 porque las iteracion le suma uno al terminar por tanto si se quiere retroceder se resta 2
+                                        i -=2; 
                                         break;
                                     case 3:
                                         break;
@@ -526,12 +525,6 @@ public class Vendedor {
         return false; 
 
     }
-    
-    //notas sobre la oferta
-    //las ofertas se deben presentear la marca el modelo y el tipo de motor y Precio: precio
-    //ademas se añade el mensaje de se han realizado x numeros de ofertas
-    //muestar la oferta 1 
-    //muestra opciones de siguiente oferta o aceptar oferta
     
     @Override
     public String toString() {
