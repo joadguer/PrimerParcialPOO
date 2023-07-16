@@ -25,7 +25,7 @@ public class Vehiculo {
         protected int recorrido;
         protected double precio;
         private int idVehiculo;
-        protected ArrayList<Oferta> ofertas;
+        protected  static ArrayList<Oferta> ofertas;
         protected static ArrayList<Vehiculo> vehiculos = new ArrayList<>();
     
     public Vehiculo(int idVehiculo, String placa, String marca, String modelo, String tipoMotor, String color, String tipoCombustible, int año, int recorrido, double precio) {
@@ -124,7 +124,7 @@ public class Vehiculo {
         this.idVehiculo = idVehiculo;
     }
 
-    public ArrayList<Oferta> getOfertas() {
+    public static ArrayList<Oferta> getOfertas() {
         return ofertas;
     }
 
