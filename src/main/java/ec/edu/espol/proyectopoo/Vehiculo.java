@@ -140,15 +140,11 @@ public class Vehiculo {
         Vehiculo.vehiculos = vehiculos;
     }
 
-    
-    
     @Override
     public String toString() {
-        return "Vehiculo{" + "placa=" + placa + ", marca=" + marca + ", modelo=" + modelo + ", tipoMotor=" + tipoMotor + ", color=" + color + ", tipoCombustible=" + tipoCombustible + "año" + año + ", recorrido=" + recorrido + ", precio=" + precio + ", ofertas=" + ofertas + '}';
+        return "Vehiculo{" + "placa=" + placa + ", marca=" + marca + ", modelo=" + modelo + ", tipoMotor=" + tipoMotor + ", color=" + color + ", tipoCombustible=" + tipoCombustible + ", a\u00f1o=" + año + ", recorrido=" + recorrido + ", precio=" + precio + ", idVehiculo=" + idVehiculo + ", ofertas=" + ofertas + '}';
     }
     
-    
-
     public void saveFile(String nameFile){
         try(PrintWriter pw = new PrintWriter(new FileOutputStream(new File(nameFile),true))){
             pw.println(this.idVehiculo+"-"+this.placa+"-"+this.marca+"-"+this.modelo+"-"+this.tipoMotor+"-"+this.color+"-"+this.tipoCombustible+"-"+this.año+"-"+this.recorrido+"-"+this.precio);
@@ -174,8 +170,7 @@ public class Vehiculo {
 	try(PrintWriter pw = new PrintWriter(new FileOutputStream(new File(nameFile), append ))){
             for(Vehiculo v: vehiculos){
                 pw.println(v.idVehiculo+"-"+v.placa+"-"+v.marca+"-"+v.modelo+"-"+v.tipoMotor+"-"+v.color+"-"+v.tipoCombustible+"-"+v.año+"-"+v.recorrido+"-"+v.precio);
-                Vehiculo.vehiculos.add(v); //agrega cada Vehiculo del arrayList a la lista estatica con todos los vehiculos.
-        }
+            }
         }catch(Exception e){
             System.out.println(e.getMessage());    
         }	

@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ec.espol.edu.util.Util;
+import java.util.Properties;
 
 /**
  *
@@ -41,7 +42,102 @@ public class Vendedor {
         this.clave = clave;
     }
     
+       @Override
+    public String toString() {
+        try {
+            return this.nombre+"-"+this.apellidos+"-"+this.organizacion+"-"+this.correoElectronico+"-"+Arrays.toString(GFG2.getSHA(this.clave));
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(Vendedor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getApellidos() {
+        return apellidos;
+    }
+
+    public void setApellidos(String apellidos) {
+        this.apellidos = apellidos;
+    }
+
+    public String getOrganizacion() {
+        return organizacion;
+    }
+
+    public void setOrganizacion(String organizacion) {
+        this.organizacion = organizacion;
+    }
+
+    public String getCorreoElectronico() {
+        return correoElectronico;
+    }
+
+    public void setCorreoElectronico(String correoElectronico) {
+        this.correoElectronico = correoElectronico;
+    }
+
+    public String getClave() {
+        return clave;
+    }
+
+    public void setClave(String clave) {
+        this.clave = clave;
+    } 
     
+    
+    public void saveFile(String nameFile){
+        try(PrintWriter pw = new PrintWriter(new FileOutputStream(new File(nameFile),true))){
+            pw.println(this.nombre+"-"+this.apellidos+"-"+this.organizacion+"-"+this.correoElectronico+"-"+GFG2.toHexString(GFG2.getSHA(this.clave)));
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }	
+        }
+    
+    public static void saveFile(ArrayList<Vendedor> vendedores, String nameFile){
+	try(PrintWriter pw = new PrintWriter(new FileOutputStream(new File(nameFile), true ))){
+            for(Vendedor v: vendedores){
+                pw.println(v.nombre+"-"+v.apellidos+"-"+v.organizacion+"-"+v.correoElectronico+"-"+GFG2.toHexString(GFG2.getSHA(v.clave))); //el getSHA hace que la clave se coloque en el documento como hash code
+        }
+        }catch(Exception e){
+            System.out.println(e.getMessage());    
+        }	
+    }
+    
+        public static void saveFile(ArrayList<Vendedor> vendedores, String nameFile,boolean append){
+	try(PrintWriter pw = new PrintWriter(new FileOutputStream(new File(nameFile), append ))){
+            for(Vendedor v: vendedores){
+                pw.println(v.nombre+"-"+v.apellidos+"-"+v.organizacion+"-"+v.correoElectronico+"-"+GFG2.toHexString(GFG2.getSHA(v.clave))); //el getSHA hace que la clave se coloque en el documento como hash code
+        }
+        }catch(Exception e){
+            System.out.println(e.getMessage());    
+        }	
+    }
+    
+    public static ArrayList<Vendedor> readFile(String nameFile){
+	ArrayList<Vendedor> vendedores = new ArrayList<>();
+	try(Scanner sc = new Scanner(new File(nameFile))){
+                while(sc.hasNextLine()){
+                String linea  = sc.nextLine();
+                String[] ven = linea.split("-");
+                Vendedor va = new Vendedor(ven[0],ven[1],ven[2],ven[3],ven[4]);
+                vendedores.add(va);
+            }
+        }catch(Exception e)
+        {
+            System.out.println(e.getMessage());
+        }	
+        return vendedores;
+        //retorna la lista de vendedores
+    }
+ 
     public static void registrarVendedor(String vendedoresArchivo){
         //obteniendo datos del nuevo vendedor
         Scanner sc = new Scanner(System.in);
@@ -253,6 +349,8 @@ public class Vendedor {
         Scanner sc = new Scanner(System.in);
         
         ArrayList<Vendedor> vendedores = Vendedor.readFile(archivoVendedores);
+        ArrayList<Vehiculo> vehiculos = Vehiculo.readFile(archivoVehiculos);
+        ArrayList<Oferta> ofertas = Oferta.readFile(archivoOfertas);
         
         ArrayList<String> correos = new ArrayList<>();
         for(Vendedor v: vendedores){
@@ -271,10 +369,8 @@ public class Vendedor {
             for(int i =0; i<correos.size();i++){
                 if(!(correos.get(i).equals(correoElectronicoIn))){
                     seguirEjecutando = true;
-                    //seguir ejecutando cambia a true para que se vuelva a pedir todo
-                    //el break sirve para que seguirEjecutando no cambie a false
                 }else{
-                    seguirEjecutando = false; //actualiza el seguirEjecutando cuando encuentra el correo igual
+                    seguirEjecutando = false; 
                     vRevisarClave = vendedores.get(i);                
                     break; //acaba con el for
                 } 
@@ -282,9 +378,7 @@ public class Vendedor {
             if(seguirEjecutando)
                 System.out.println("Correo ingresado no existe");
         }while(seguirEjecutando);
-        //el codigo arriba valida que el correo este en el documento
         
-        //validar la clave usando el hashCode
         String claveVerificar;
         
         do {
@@ -301,16 +395,14 @@ public class Vendedor {
         
         
        String placaBuscar;
-       ArrayList<Vehiculo> vehiculos = Vehiculo.readFile(archivoVehiculos);
        Vehiculo vehiculoPlaca = null;
-       //vehiculoPlaca es el vehiculo que contiene la placa que se busca
         do{ 
             System.out.println("Ingrese la placa del vehiculo:");
             placaBuscar = sc.nextLine();
             for(Vehiculo v: vehiculos){
                 if(v.getPlaca().equals(placaBuscar))
                 {
-                    vehiculoPlaca = v;
+                    vehiculoPlaca = v;              
                     break;
                 }
             }   
@@ -318,32 +410,25 @@ public class Vendedor {
                 System.out.println("Placa no encontrada");
             }    
         }while(vehiculoPlaca == null);
-//revisar esta parte porque tecnicamente el vehiculo nunca tiene ofertas            
-            if(vehiculoPlaca != null)
-            {
-                
-                Oferta.saveFile(new ArrayList<>(), archivoOfertas); //arrayList que impide que cuando se abra con el metodo read no genera error porque el archivo ahora si existe
-                ArrayList<Oferta> ofertas = Oferta.readFile(archivoOfertas); //aqui estan todas las ofertas
+        
+                //Oferta.saveFile(new ArrayList<>(), archivoOfertas);
                 ArrayList<Oferta> ofertasVehiculo = new ArrayList<>(); //aquí estarán las ofertas que se agregaran al vehiculo
-                //ofertas readfile si devuelve un arrayList vacío por tanto no
                     for (Oferta offer : ofertas) {
                         if (offer.getIdVehiculo() == vehiculoPlaca.getIdVehiculo()) {
-                            ofertasVehiculo.add(offer); //se añade la oferta que coincide con el id del vehiculo al vehiculo
+                            ofertasVehiculo.add(offer); 
+                            
                         }
                     }
-
-                    // Asignar las ofertas al vehículo
-                    vehiculoPlaca.setOfertas(ofertasVehiculo);
-                
+                    vehiculoPlaca.setOfertas(ofertasVehiculo);//validando
+                    System.out.println(vehiculoPlaca);
                 //al finalizar el vehiculo que tenga el mismo id que vehiculoPlaca tendrá todas las ofertas.
                 
                 System.out.println(vehiculoPlaca.marca+" "+vehiculoPlaca.modelo+" "+vehiculoPlaca.tipoMotor+" Precio: "+vehiculoPlaca.precio);
                                 
-                
+            
                 if(vehiculoPlaca.ofertas.isEmpty()){
                     System.out.println("no se han realizado orfertas");
-                }
-                
+                } 
                 else if(vehiculoPlaca.ofertas.size() == 1){
                     System.out.println("Se ha realizado "+ vehiculoPlaca.ofertas.size()+" oferta");
                     System.out.println("""
@@ -354,23 +439,16 @@ public class Vendedor {
                     int aceptar = sc.nextInt();
                     sc.nextLine();
                     if(aceptar == 1){
-                        
-                    
-                        ArrayList<Oferta> ofertasfinal = Oferta.readFile(archivoOfertas);
-                        ArrayList<Oferta> ofertasfinal2 = Oferta.readFile(archivoOfertas);
-                                        
-                                        for (Oferta offer : ofertasfinal) {
-                                            if (offer.getIdVehiculo() == vehiculoPlaca.getIdVehiculo()) {
-                                                ofertasfinal2.remove(offer);//se eliminan las ofertas que coinciden con el id del vehiculo al vehiculo porque el vehiculo ya se vendió
-                                                }
-                                            }//este codigo elimnina las ofertas del arrayList static que contiene todas las ofertas
-                                            Oferta.saveFile(ofertasfinal2, archivoOfertas, false);//sobreescribe el archivo de ofertas
-                                            ArrayList<Vehiculo> vehiculosfinal = Vehiculo.readFile(archivoVehiculos);
-                                            vehiculosfinal.remove(vehiculoPlaca); //elimna del arrayList al vehiculo
-                                            Vehiculo.saveFile(vehiculosfinal, archivoVehiculos,false);//sobreescribe el archivo y agrega cada vehiculo
-
-                                        return true; //esta parte revisar para modificarla      
-                    }    
+                        for(Vehiculo v: vehiculos){
+                            if(v.getPlaca().equals(placaBuscar))
+                            {
+                                vehiculos.remove(v);              
+                                break;
+                            }
+                        }   
+                        Vehiculo.saveFile(vehiculos, archivoVehiculos,false);
+                        return true;
+                    }
                     else
                         return false; //esto solo lo pongo como prueba para salir
                 }
@@ -390,21 +468,15 @@ public class Vendedor {
                                 switch (opcion){
                 //no es necesario poner un default porque las validaciones permiten que los valores solo sean 1 o 2
                                     case 1:
-                                        
-                        ArrayList<Oferta> ofertasfinal = Oferta.readFile(archivoOfertas);
-                        ArrayList<Oferta> ofertasfinal2 = Oferta.readFile(archivoOfertas);
-                                        
-                                        for (Oferta offer : ofertasfinal) {
-                                            if (offer.getIdVehiculo() == vehiculoPlaca.getIdVehiculo()) {
-                                                ofertasfinal2.remove(offer);//se eliminan las ofertas que coinciden con el id del vehiculo al vehiculo porque el vehiculo ya se vendió
-                                                }
-                                            }//este codigo elimnina las ofertas del arrayList static que contiene todas las ofertas
-                                            Oferta.saveFile(ofertasfinal2, archivoOfertas, false);//sobreescribe el archivo de ofertas
-                                            ArrayList<Vehiculo> vehiculosfinal = Vehiculo.readFile(archivoVehiculos);
-                                            vehiculosfinal.remove(vehiculoPlaca); //elimna del arrayList al vehiculo
-                                            Vehiculo.saveFile(vehiculosfinal, archivoVehiculos,false);//sobreescribe el archivo y agrega cada vehiculo
-
-                                        return true; //esta parte revisar para modificarla   
+                                        for(Vehiculo v: vehiculos){
+                                            if(v.getPlaca().equals(placaBuscar))
+                                            {
+                                                vehiculos.remove(v);              
+                                                break;
+                                            }
+                                        }   
+                                        Vehiculo.saveFile(vehiculos, archivoVehiculos,false);
+                                        return true;
                                     case 2:
                                         break;
                 }
@@ -420,21 +492,15 @@ public class Vendedor {
                             }while(opcion !=1 && opcion !=2);
                                 switch (opcion){
                                     case 1:
-                                     
-                        ArrayList<Oferta> ofertasfinal = Oferta.readFile(archivoOfertas);
-                        ArrayList<Oferta> ofertasfinal2 = Oferta.readFile(archivoOfertas);
-                                        
-                                        for (Oferta offer : ofertasfinal) {
-                                            if (offer.getIdVehiculo() == vehiculoPlaca.getIdVehiculo()) {
-                                                ofertasfinal2.remove(offer);//se eliminan las ofertas que coinciden con el id del vehiculo al vehiculo porque el vehiculo ya se vendió
-                                                }
-                                            }//este codigo elimnina las ofertas del arrayList static que contiene todas las ofertas
-                                            Oferta.saveFile(ofertasfinal2, archivoOfertas, false);//sobreescribe el archivo de ofertas
-                                            ArrayList<Vehiculo> vehiculosfinal = Vehiculo.readFile(archivoVehiculos);
-                                            vehiculosfinal.remove(vehiculoPlaca); //elimna del arrayList al vehiculo
-                                            Vehiculo.saveFile(vehiculosfinal, archivoVehiculos,false);//sobreescribe el archivo y agrega cada vehiculo
-
-                                        return true; //esta parte revisar para modificarla   
+                                        for(Vehiculo v: vehiculos){
+                                            if(v.getPlaca().equals(placaBuscar))
+                                            {
+                                                vehiculos.remove(v);              
+                                                break;
+                                            }
+                                        }   
+                                        Vehiculo.saveFile(vehiculos, archivoVehiculos,false);                                        
+                                        return true;
                                     case 2:
                                         i -=2;
                                         break;
@@ -454,18 +520,15 @@ public class Vendedor {
 
                         switch (opcion){
                             case 1:
-                                ArrayList<Oferta> ofertasfinal = Oferta.readFile(archivoOfertas);
-                                for (Oferta offer : ofertasfinal) {
-                                    if (offer.getIdVehiculo() == vehiculoPlaca.getIdVehiculo()) {
-                                        ofertasfinal.remove(offer);//se eliminan las ofertas que coinciden con el id del vehiculo al vehiculo porque el vehiculo ya se vendió
-                                        }
-                                    }
-
-                                Oferta.saveFile(ofertasfinal, archivoOfertas, false);//sobreescribe el archivo de ofertas
-                                ArrayList<Vehiculo> vehiculosfinal = Vehiculo.readFile(archivoVehiculos);
-                                vehiculosfinal.remove(vehiculoPlaca); //elimna del arrayList al vehiculo
-                                Vehiculo.saveFile(vehiculosfinal, archivoVehiculos,false);//sobreescribe el archivo y agrega cada vehiculo
-                                return true;
+                                for(Vehiculo v: vehiculos){
+                                  if(v.getPlaca().equals(placaBuscar))
+                                  {
+                                      vehiculos.remove(v);              
+                                      break;
+                                  }
+                              }   
+                              Vehiculo.saveFile(vehiculos, archivoVehiculos,false);
+                              return true;
                             case 2:
                                 i -=2; 
                                 break;
@@ -475,94 +538,10 @@ public class Vendedor {
                     }
                 }
             }
-        }
+        
         return false;
     }
     
-    @Override
-    public String toString() {
-        try {
-            return this.nombre+"-"+this.apellidos+"-"+this.organizacion+"-"+this.correoElectronico+"-"+Arrays.toString(GFG2.getSHA(this.clave));
-        } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(Vendedor.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getApellidos() {
-        return apellidos;
-    }
-
-    public void setApellidos(String apellidos) {
-        this.apellidos = apellidos;
-    }
-
-    public String getOrganizacion() {
-        return organizacion;
-    }
-
-    public void setOrganizacion(String organizacion) {
-        this.organizacion = organizacion;
-    }
-
-    public String getCorreoElectronico() {
-        return correoElectronico;
-    }
-
-    public void setCorreoElectronico(String correoElectronico) {
-        this.correoElectronico = correoElectronico;
-    }
-
-    public String getClave() {
-        return clave;
-    }
-
-    public void setClave(String clave) {
-        this.clave = clave;
-    } 
-    
-    
-    public void saveFile(String nameFile){
-        try(PrintWriter pw = new PrintWriter(new FileOutputStream(new File(nameFile),true))){
-            pw.println(this.nombre+"-"+this.apellidos+"-"+this.organizacion+"-"+this.correoElectronico+"-"+GFG2.toHexString(GFG2.getSHA(this.clave)));
-        }catch(Exception e){
-            System.out.println(e.getMessage());
-        }	
-        }
-    
-    public static void saveFile(ArrayList<Vendedor> vendedores, String nameFile){
-	try(PrintWriter pw = new PrintWriter(new FileOutputStream(new File(nameFile), true ))){
-            for(Vendedor v: vendedores){
-                pw.println(v.nombre+"-"+v.apellidos+"-"+v.organizacion+"-"+v.correoElectronico+"-"+GFG2.toHexString(GFG2.getSHA(v.clave))); //el getSHA hace que la clave se coloque en el documento como hash code
-        }
-        }catch(Exception e){
-            System.out.println(e.getMessage());    
-        }	
-    }
-    public static ArrayList<Vendedor> readFile(String nameFile){
-	ArrayList<Vendedor> vendedores = new ArrayList<>();
-	try(Scanner sc = new Scanner(new File(nameFile))){
-                while(sc.hasNextLine()){
-                String linea  = sc.nextLine();
-                String[] ven = linea.split("-");
-                Vendedor va = new Vendedor(ven[0],ven[1],ven[2],ven[3],ven[4]);
-                vendedores.add(va);
-            }
-        }catch(Exception e)
-        {
-            System.out.println(e.getMessage());
-        }	
-        return vendedores;
-        //retorna la lista de vendedores
-    }
 
     
     
@@ -570,37 +549,37 @@ public class Vendedor {
     
     
 //    private static void enviarConGMail(String destinatario, String asunto, String cuerpo) {
-//    //La dirección de correo de envío
-//    String remitente = "remitente@gmail.com";
-//    //La clave de aplicación obtenida según se explica en este artículo:
-//    String claveemail = "1234567890123456";
+//        //La dirección de correo de envío
+//        String remitente = "remitente@gmail.com";
+//        //La clave de aplicación obtenida según se explica en este artículo:
+//        String claveemail = "1234567890123456";
 //
-//    Properties props = System.getProperties();
-//    props.put("mail.smtp.host", "smtp.gmail.com");  //El servidor SMTP de Google
-//    props.put("mail.smtp.user", remitente);
-//    props.put("mail.smtp.clave", claveemail);    //La clave de la cuenta
-//    props.put("mail.smtp.auth", "true");    //Usar autenticación mediante usuario y clave
-//    props.put("mail.smtp.starttls.enable", "true"); //Para conectar de manera segura al servidor SMTP
-//    props.put("mail.smtp.port", "587"); //El puerto SMTP seguro de Google
+//        Properties props = System.getProperties();
+//        props.put("mail.smtp.host", "smtp.gmail.com");  //El servidor SMTP de Google
+//        props.put("mail.smtp.user", remitente);
+//        props.put("mail.smtp.clave", claveemail);    //La clave de la cuenta
+//        props.put("mail.smtp.auth", "true");    //Usar autenticación mediante usuario y clave
+//        props.put("mail.smtp.starttls.enable", "true"); //Para conectar de manera segura al servidor SMTP
+//        props.put("mail.smtp.port", "587"); //El puerto SMTP seguro de Google
 //
-//    Session session = Session.getDefaultInstance(props);
-//    MimeMessage message = new MimeMessage(session);
+//        Session session = Session.getDefaultInstance(props);
+//        MimeMessage message = new MimeMessage(session);
 //
-//    try {
-//        message.setFrom(new InternetAddress(remitente));
-//        message.addRecipient(Message.RecipientType.TO, new InternetAddress(destinatario));   //Se podrían añadir varios de la misma manera
-//        message.setSubject(asunto);
-//        message.setText(cuerpo);
-//        Transport transport = session.getTransport("smtp");
-//        transport.connect("smtp.gmail.com", remitente, claveemail);
-//        transport.sendMessage(message, message.getAllRecipients());
-//        transport.close();
-//    }
-//    catch (MessagingException me) {
-//        me.printStackTrace();   //Si se produce un error
-//    }
+//        try {
+//            message.setFrom(new InternetAddress(remitente));
+//            message.addRecipient(Message.RecipientType.TO, new InternetAddress(destinatario));   //Se podrían añadir varios de la misma manera
+//            message.setSubject(asunto);
+//            message.setText(cuerpo);
+//            Transport transport = session.getTransport("smtp");
+//            transport.connect("smtp.gmail.com", remitente, claveemail);
+//            transport.sendMessage(message, message.getAllRecipients());
+//            transport.close();
+//        }
+//        catch (MessagingException me) {
+//            me.printStackTrace();   //Si se produce un error
+//        }
 //  }
-//    
+    
     
 
 }

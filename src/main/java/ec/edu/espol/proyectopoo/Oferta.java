@@ -110,14 +110,10 @@ public class Oferta {
         Oferta.ofertas = ofertas;
     }
 
-    
-    
     @Override
     public String toString() {
-        return "Oferta{" + "correo=" + correo + ", precio=" + precio + ", vehiculo=" + vehiculo + ", comprador=" + comprador + '}';
-    }
-    
-    
+        return "Oferta{" + "correo=" + correo + ", precio=" + precio + ", vehiculo=" + vehiculo + ", comprador=" + comprador + ", idOferta=" + idOferta + ", idComprador=" + idComprador + ", idVehiculo=" + idVehiculo + '}';
+    }    
     
     
     public void saveFile(String nameFile){
