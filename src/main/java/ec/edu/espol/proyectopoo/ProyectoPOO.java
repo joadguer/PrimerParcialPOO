@@ -24,7 +24,6 @@ public class ProyectoPOO {
         
         Scanner sc = new Scanner(System.in);
         
-        // Menú de opciones
         StringBuilder sb = new StringBuilder();
         String menu = "Menu de Opciones:\n";
         String op1 = "1. Vendedor\n";
@@ -32,7 +31,6 @@ public class ProyectoPOO {
         String op3 = "3. Salir";
         sb.append(menu).append(op1).append(op2).append(op3);
         
-        // Menú de opciones de vendedor
         StringBuilder sbv = new StringBuilder();
         String menuVendedor = "Menu de Opciones Vendedor:\n";
         String opv1 = "1. Registrar un nuevo vendedor\n";
@@ -41,7 +39,7 @@ public class ProyectoPOO {
         String opv4 = "4. Regresar";
         sbv.append(menuVendedor).append(opv1).append(opv2).append(opv3).append(opv4);        
         
-        // Menú de opciones de comprador
+
         StringBuilder sbc = new StringBuilder();
         String menuComprador = "Menu de Opciones Comprador:\n";
         String opc1 = "1. Registrar un nuevo comprador\n";
@@ -73,7 +71,6 @@ public class ProyectoPOO {
                             Vendedor.aceptarOferta("vendedores.txt", "vehiculos.txt","ofertas.txt");
                             break;
                         case 4:
-                            // Regresar al menú anterior
                             break;
                         default: 
                             break;
@@ -96,7 +93,6 @@ public class ProyectoPOO {
                             Comprador.ofertarxVehiculo("compradores.txt","vehiculos.txt","ofertas.txt");
                             break;
                         case 3:
-                            // Regresar al menú anterior
                             break;
                         default: 
                             break;

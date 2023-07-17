@@ -148,7 +148,7 @@ public class Vehiculo {
     public void saveFile(String nameFile){
         try(PrintWriter pw = new PrintWriter(new FileOutputStream(new File(nameFile),true))){
             pw.println(this.idVehiculo+"-"+this.placa+"-"+this.marca+"-"+this.modelo+"-"+this.tipoMotor+"-"+this.color+"-"+this.tipoCombustible+"-"+this.año+"-"+this.recorrido+"-"+this.precio);
-            Vehiculo.vehiculos.add(this); //agrega el vehiculo que estará en el archivo a la lista
+            Vehiculo.vehiculos.add(this); 
         }catch(Exception e){
             System.out.println(e.getMessage());
         }	
@@ -158,14 +158,14 @@ public class Vehiculo {
 	try(PrintWriter pw = new PrintWriter(new FileOutputStream(new File(nameFile), true ))){
             for(Vehiculo v: vehiculos){
                 pw.println(v.idVehiculo+"-"+v.placa+"-"+v.marca+"-"+v.modelo+"-"+v.tipoMotor+"-"+v.color+"-"+v.tipoCombustible+"-"+v.año+"-"+v.recorrido+"-"+v.precio);
-                Vehiculo.vehiculos.add(v); //agrega cada Vehiculo del arrayList a la lista estatica con todos los vehiculos.
+                Vehiculo.vehiculos.add(v); 
         }
         }catch(Exception e){
             System.out.println(e.getMessage());    
         }	
     }
     
-    //sobre carga para cuando quiera que todo el archivo se sobreescriba e ingrese solo los valores del array
+    
     public static void saveFile(ArrayList<Vehiculo> vehiculos, String nameFile,boolean append){
 	try(PrintWriter pw = new PrintWriter(new FileOutputStream(new File(nameFile), append ))){
             for(Vehiculo v: vehiculos){
@@ -176,7 +176,6 @@ public class Vehiculo {
         }	
     }    
     
-    //la excepcion es util porque se esta leyendo el archivo y por tanto si no existe el archivo se genera una excepcion    
     public static ArrayList<Vehiculo> readFile(String nameFile){
 	ArrayList<Vehiculo> vehiculos = new ArrayList<>();
 	try(Scanner sc = new Scanner(new File(nameFile))){
@@ -184,7 +183,6 @@ public class Vehiculo {
                 String linea  = sc.nextLine();
                 String[] ven = linea.split("-");
                 Vehiculo va = new Vehiculo(Integer.parseInt(ven[0]),ven[1],ven[2],ven[3],ven[4],ven[5],ven[6],Integer.parseInt(ven[7]),Integer.parseInt(ven[8]), Double.parseDouble(ven[9]));
-   // public Vehiculo(int idVehiculo, String placa, String marca, String modelo, String tipoMotor, String color, String tipoCombustible, int año, int recorrido, double precio) {
                 
                 vehiculos.add(va);
             }
@@ -193,7 +191,6 @@ public class Vehiculo {
             System.out.println(e.getMessage());
         }	
         return vehiculos;
-        //retorna la lista de vehiculos
     }
     
     

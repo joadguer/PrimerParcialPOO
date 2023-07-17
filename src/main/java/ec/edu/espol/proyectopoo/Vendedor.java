@@ -4,15 +4,11 @@
  */
 package ec.edu.espol.proyectopoo;
 
-import ec.espol.edu.util.Util;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -39,7 +35,6 @@ public class Vendedor {
     private String clave;
 
     
-    //considerar hacer el metodo Vendedor un metodo estatico
     public Vendedor(String nombre, String apellidos, String organizacion, String correoElectronico, String clave) {
         this.nombre = nombre;
         this.apellidos = apellidos;
@@ -110,7 +105,7 @@ public class Vendedor {
     public static void saveFile(ArrayList<Vendedor> vendedores, String nameFile){
 	try(PrintWriter pw = new PrintWriter(new FileOutputStream(new File(nameFile), true ))){
             for(Vendedor v: vendedores){
-                pw.println(v.nombre+"-"+v.apellidos+"-"+v.organizacion+"-"+v.correoElectronico+"-"+GFG2.toHexString(GFG2.getSHA(v.clave))); //el getSHA hace que la clave se coloque en el documento como hash code
+                pw.println(v.nombre+"-"+v.apellidos+"-"+v.organizacion+"-"+v.correoElectronico+"-"+GFG2.toHexString(GFG2.getSHA(v.clave))); 
         }
         }catch(Exception e){
             System.out.println(e.getMessage());    
@@ -120,7 +115,7 @@ public class Vendedor {
         public static void saveFile(ArrayList<Vendedor> vendedores, String nameFile,boolean append){
 	try(PrintWriter pw = new PrintWriter(new FileOutputStream(new File(nameFile), append ))){
             for(Vendedor v: vendedores){
-                pw.println(v.nombre+"-"+v.apellidos+"-"+v.organizacion+"-"+v.correoElectronico+"-"+GFG2.toHexString(GFG2.getSHA(v.clave))); //el getSHA hace que la clave se coloque en el documento como hash code
+                pw.println(v.nombre+"-"+v.apellidos+"-"+v.organizacion+"-"+v.correoElectronico+"-"+GFG2.toHexString(GFG2.getSHA(v.clave))); 
         }
         }catch(Exception e){
             System.out.println(e.getMessage());    
@@ -141,11 +136,11 @@ public class Vendedor {
             System.out.println(e.getMessage());
         }	
         return vendedores;
-        //retorna la lista de vendedores
+       
     }
  
     public static void registrarVendedor(String vendedoresArchivo){
-        //obteniendo datos del nuevo vendedor
+        
         Scanner sc = new Scanner(System.in);
         System.out.println("Ingrese el Nombre:");
         String nombreIn = sc.nextLine();
@@ -187,7 +182,7 @@ public class Vendedor {
             claveIn = sc.nextLine();
 
             try {
-                if (!claveIn.isBlank()) {  // Valida que la clave no esté vacía
+                if (!claveIn.isBlank()) {  
                     byte[] claveAlmacenar = GFG2.getSHA(claveIn);
                 } else {
                     System.out.println("La clave no puede estar vacía.");
@@ -198,19 +193,19 @@ public class Vendedor {
             }   
         }while(claveIn.isBlank());
         
-        Vendedor vAgregar = new Vendedor(nombreIn, apellidosIn, organizacionIn, correoElectronicoIn, claveIn);//la claveIn es la clave sin hash code
+        Vendedor vAgregar = new Vendedor(nombreIn, apellidosIn, organizacionIn, correoElectronicoIn, claveIn);
         
         vAgregar.saveFile(vendedoresArchivo);
     }
     
         
     public static void registrarVehiculo(String archivoVendedores,String archivoVehiculos) throws NoSuchAlgorithmException{
-        //validar que se ingrese el correo y la clave
+
 
         Scanner sc = new Scanner(System.in);     
         ArrayList<Vendedor> vendedores = Vendedor.readFile(archivoVendedores);
         
-        //correos de cada vendedor del archivo
+        
         ArrayList<String> correos = new ArrayList<>();
         for(Vendedor v: vendedores){
             String c1 = v.correoElectronico;
@@ -227,9 +222,9 @@ public class Vendedor {
                 if(!(correos.get(i).equals(correoElectronicoIn))){
                     seguirEjecutando = true;
                 }else{
-                    seguirEjecutando = false; //actualiza el seguirEjecutando cuando encuentra el correo igual
+                    seguirEjecutando = false; 
                     vRevisarClave = vendedores.get(i);                
-                    break; //acaba con el for
+                    break; 
                 } 
             }
             if(seguirEjecutando)
@@ -378,7 +373,7 @@ public class Vendedor {
                 }else{
                     seguirEjecutando = false; 
                     vRevisarClave = vendedores.get(i);                
-                    break; //acaba con el for
+                    break; 
                 } 
             }
             if(seguirEjecutando)
@@ -417,17 +412,17 @@ public class Vendedor {
             }    
         }while(vehiculoPlaca == null);
         
-                //Oferta.saveFile(new ArrayList<>(), archivoOfertas);
-                ArrayList<Oferta> ofertasVehiculo = new ArrayList<>(); //aquí estarán las ofertas que se agregaran al vehiculo
+                
+                ArrayList<Oferta> ofertasVehiculo = new ArrayList<>(); 
                     for (Oferta offer : ofertas) {
                         if (offer.getIdVehiculo() == vehiculoPlaca.getIdVehiculo()) {
                             ofertasVehiculo.add(offer); 
                             
                         }
                     }
-                    vehiculoPlaca.setOfertas(ofertasVehiculo);//validando
+                    vehiculoPlaca.setOfertas(ofertasVehiculo);
                     System.out.println(vehiculoPlaca);
-                //al finalizar el vehiculo que tenga el mismo id que vehiculoPlaca tendrá todas las ofertas.
+                
                 
                 System.out.println(vehiculoPlaca.marca+" "+vehiculoPlaca.modelo+" "+vehiculoPlaca.tipoMotor+" Precio: "+vehiculoPlaca.precio);
                                 
@@ -457,7 +452,7 @@ public class Vendedor {
                         return true;
                     }
                     else
-                        return false; //esto solo lo pongo como prueba para salir
+                        return false; 
                 }
                 else{
                     int opcion;
@@ -473,7 +468,7 @@ public class Vendedor {
                                 sc.nextLine();                                
                              }while(opcion !=1 && opcion != 2);
                                 switch (opcion){
-                //no es necesario poner un default porque las validaciones permiten que los valores solo sean 1 o 2
+                
                                     case 1:
                                         for(Vehiculo v: vehiculos){
                                             if(v.getPlaca().equals(placaBuscar))
@@ -555,29 +550,29 @@ public class Vendedor {
 
     
     
-    //Revisar el la funcion enviar Gmail, hay que agregar las dependencias creo
+    
     
     
     private static void enviarConGMail(String destinatario, String asunto, String cuerpo) {
-        //La dirección de correo de envío
+        
         String remitente = "josueadrianib@gmail.com";
-        //La clave de aplicación obtenida según se explica en este artículo:
+        
         String claveemail = "kcknlcwieaxmzjvj";
 
         Properties props = System.getProperties();
-        props.put("mail.smtp.host", "smtp.gmail.com");  //El servidor SMTP de Google
+        props.put("mail.smtp.host", "smtp.gmail.com");  
         props.put("mail.smtp.user", remitente);
-        props.put("mail.smtp.clave", claveemail);    //La clave de la cuenta
-        props.put("mail.smtp.auth", "true");    //Usar autenticación mediante usuario y clave
-        props.put("mail.smtp.starttls.enable", "true"); //Para conectar de manera segura al servidor SMTP
-        props.put("mail.smtp.port", "587"); //El puerto SMTP seguro de Google
+        props.put("mail.smtp.clave", claveemail);    
+        props.put("mail.smtp.auth", "true");   
+        props.put("mail.smtp.starttls.enable", "true"); 
+        props.put("mail.smtp.port", "587"); 
 
         Session session = Session.getDefaultInstance(props);
         MimeMessage message = new MimeMessage(session);
 
         try {
             message.setFrom(new InternetAddress(remitente));
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress(destinatario));   //Se podrían añadir varios de la misma manera
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(destinatario));   
             message.setSubject(asunto);
             message.setText(cuerpo);
             Transport transport = session.getTransport("smtp");
@@ -586,7 +581,7 @@ public class Vendedor {
             transport.close();
         }
         catch (MessagingException me) {
-            me.printStackTrace();   //Si se produce un error
+            me.printStackTrace();  
         }
   }
     

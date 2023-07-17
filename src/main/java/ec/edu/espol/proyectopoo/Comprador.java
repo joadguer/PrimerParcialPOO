@@ -391,9 +391,7 @@ public class Comprador{
                 System.out.println("Ingrese el precio ofertado: ");
                 double precioOfertado = Double.parseDouble(sc.nextLine());
 
-//    public Oferta(int idOferta, int idComprador, int idVehiculo,String correo, double precio) {
                 
-//como obtener el id del comprador y del vehiculo
                 Oferta oferta = new Oferta(Util.nextID(archivoOfertas),vRevisarClave.IdComprador,vehiculosFiltrados.get(i).getIdVehiculo(),correoElectronicoIn, precioOfertado );
                 oferta.saveFile(archivoOfertas);
                 vehiculosFiltrados.get(i).addOferta(oferta);
@@ -452,7 +450,6 @@ public class Comprador{
             System.out.println(e.getMessage());
         }	
         return compradores;
-        //retorna la lista de vendedores
     }
 
 

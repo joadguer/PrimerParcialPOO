@@ -148,7 +148,6 @@ public class Oferta {
         }	
     }    
     
-    //la excepcion es util porque se esta leyendo el archivo y por tanto si no existe el archivo se genera una excepcion    
     public static ArrayList<Oferta> readFile(String nameFile){
 	ArrayList<Oferta> ofertas = new ArrayList<>();
 	try(Scanner sc = new Scanner(new File(nameFile))){
@@ -156,7 +155,6 @@ public class Oferta {
                 String linea  = sc.nextLine();
                 String[] ofer = linea.split("-");
                 Oferta of = new Oferta(Integer.parseInt(ofer[0]),Integer.parseInt(ofer[1]),Integer.parseInt(ofer[2]),ofer[3],Double.parseDouble(ofer[4]));
-//    public Oferta(int idOferta, int idComprador, int idVehiculo,String correo, double precio) {
                 
                 ofertas.add(of);
             }
@@ -165,13 +163,11 @@ public class Oferta {
             System.out.println(e.getMessage());
         }	
         return ofertas;
-        //retorna la lista de vendedores
     }    
     
     public static void link(ArrayList<Comprador> compradores, ArrayList<Oferta> ofertas ,ArrayList<Vehiculo> vehiculos){
         for(Oferta o: ofertas)
         {
-            //debes implementar el metodo searchById
             Comprador c = Comprador.searchById(compradores, o.getIdComprador());
             Vehiculo v = Vehiculo.searchById(vehiculos, o.getIdVehiculo());
             c.getOfertas().add(o);
