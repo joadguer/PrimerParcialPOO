@@ -248,20 +248,6 @@ public class Comprador{
                 seguirEjecutando = false;
             
         }while(seguirEjecutando);
-
-
-/*        
-        Scanner sc = new Scanner(System.in);
-
-        System.out.println("Ingrese su correoElectronico:");
-        String correoElectronico = sc.nextLine();
-        ArrayList<String> correos = Comprador.getCorreos();
-        if(!correos.contains(correoElectronico)) {
-            System.out.println("Debe registrarse antes de poder hacer una oferta.");
-            sc.close();
-            return;
-        }
-*/
     
 
     try {
