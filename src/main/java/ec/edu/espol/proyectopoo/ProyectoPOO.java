@@ -4,13 +4,8 @@
 
 package ec.edu.espol.proyectopoo;
 
-import java.util.ArrayList;
-import java.util.Scanner;
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
+
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 
 /**
  *

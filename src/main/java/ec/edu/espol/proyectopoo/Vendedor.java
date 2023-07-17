@@ -508,9 +508,7 @@ public class Vendedor {
                                     case 2:
                                         i -=2;
                                         break;
-                                }
-                            
-                
+                                }  
                 } else{
                     do{
                                 System.out.println("Oferta "+i +"\ncorreo: "+vehiculoPlaca.ofertas.get(i-1).getCorreo()  + "\nprecio ofertado: "+vehiculoPlaca.ofertas.get(i-1).getPrecio());

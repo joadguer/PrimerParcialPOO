@@ -165,18 +165,7 @@ public class Oferta {
         return ofertas;
     }    
     
-    public static void link(ArrayList<Comprador> compradores, ArrayList<Oferta> ofertas ,ArrayList<Vehiculo> vehiculos){
-        for(Oferta o: ofertas)
-        {
-            Comprador c = Comprador.searchById(compradores, o.getIdComprador());
-            Vehiculo v = Vehiculo.searchById(vehiculos, o.getIdVehiculo());
-            c.getOfertas().add(o);
-            v.getOfertas().add(o);
-            o.setComprador(c);
-            o.setVehiculo(v);
-        }
-    }
-    
+
 
     
 }
