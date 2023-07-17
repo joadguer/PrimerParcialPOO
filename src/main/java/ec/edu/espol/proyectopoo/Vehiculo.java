@@ -192,24 +192,6 @@ public class Vehiculo {
         }	
         return vehiculos;
     }
-    
-    
-    public static Vehiculo searchByPlaca(ArrayList<Vehiculo> vehiculos, String placa){
-        for(Vehiculo v: vehiculos)
-        {
-            if(v.placa.equals(placa))
-                return v;
-        }
-        return null;
-    }
-        public static Vehiculo searchById(ArrayList<Vehiculo> vehiculos, int id){
-        for(Vehiculo v: vehiculos)
-        {
-            if(v.idVehiculo == id)
-                return v;
-        }
-        return null;
-    }
         
     public void addOferta(Oferta e){
         this.ofertas.add(e);
