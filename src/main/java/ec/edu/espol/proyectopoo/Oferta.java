@@ -117,9 +117,9 @@ public class Oferta {
     
     
     public void saveFile(String nameFile){
-//public Oferta(int idO, int idC, int idVe, String correo, double precio, Vehiculo vehiculo, Comprador comprador)        
+    
         try(PrintWriter pw = new PrintWriter(new FileOutputStream(new File(nameFile),true))){
-            pw.println(this.idOferta+"-"+this.idComprador+"-"+this.idVehiculo+"-"+this.correo+"-"+this.precio); //no es necesario colocar el vehiculo ni el comprador porque el id ya incluye esa información para vincular a ambos
+            pw.println(this.idOferta+"-"+this.idComprador+"-"+this.idVehiculo+"-"+this.correo+"-"+this.precio); 
             Oferta.ofertas.add(this);
 
         }catch(Exception e){
@@ -130,7 +130,7 @@ public class Oferta {
     public static void saveFile(ArrayList<Oferta> ofertas, String nameFile){
 	try(PrintWriter pw = new PrintWriter(new FileOutputStream(new File(nameFile), true ))){
             for(Oferta o: ofertas){
-                pw.println(o.idOferta+"-"+o.idComprador+"-"+o.idVehiculo+"-"+o.correo+"-"+o.precio); //el getSHA hace que la clave se coloque en el documento como hash code
+                pw.println(o.idOferta+"-"+o.idComprador+"-"+o.idVehiculo+"-"+o.correo+"-"+o.precio); 
                 Oferta.ofertas.add(o);
         }
         }catch(Exception e){
@@ -140,7 +140,7 @@ public class Oferta {
     public static void saveFile(ArrayList<Oferta> ofertas, String nameFile, boolean append){
 	try(PrintWriter pw = new PrintWriter(new FileOutputStream(new File(nameFile), append ))){
             for(Oferta o: ofertas){
-                pw.println(o.idOferta+"-"+o.idComprador+"-"+o.idVehiculo+"-"+o.correo+"-"+o.precio); //el getSHA hace que la clave se coloque en el documento como hash code
+                pw.println(o.idOferta+"-"+o.idComprador+"-"+o.idVehiculo+"-"+o.correo+"-"+o.precio);
                 Oferta.ofertas.add(o);
         }
         }catch(Exception e){
